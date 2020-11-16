@@ -9,6 +9,7 @@ function inicio(){
     botonAnyadir.onclick = anyadirCookies;
     botonConsultar.onclick = mostrarCookies;
     botonModificar.onclick = modificarCookies;
+    botonBorrar.onclick = eliminarCookies;
 
 }
 
@@ -24,22 +25,30 @@ function anyadirCookies(elEvento){
 }
 
 function mostrarCookies(elEvento){
-    var cadena = document.cookie; 
-    // var arrayCookies = cadena.split(";");
+    var x = document.cookie;
+    var arrayCookies = x.split(';');
+    var lista = document.getElementById("lista");
+    lista.innerHTML="";
 
-    // if (arrayCookies != null){ 
-    //     var lista = document.getElementsByName("li");
-    //     lista.parentNode.removeChild('lista');
-    // } else {
-        // for(let i = 0; i < arrayCookies.length; i++ ){
-        //     "<li>" + arrayCookies[i] + "</li>";
-        //     }
-        //}
-}
-                
+        for(let i = 0; i < arrayCookies.length; i++){
+            var punto = document.createElement('li');
+            punto.setAttribute("id", "puntoLista");
+            punto.innerHTML = arrayCookies[i];
+            lista.appendChild(punto);
+        }
+
+}     
 
 function modificarCookies(elEvento){
-    alert("Esto funciona");
+    var nombreCookie = prompt("Nombre de la cookie:");
+    var valorCookie = prompt("Valor de la cookie:");
+    var fechaValor = prompt("¿Cuánto tiempo quieres que dure tu cookie?")
+    document.cookie= nombreCookie + "=" + valorCookie + "; + max-age=" + fechaValor;
+}
+
+function eliminarCookies(elEvento){
+    var nombreCookie = prompt("¿Qué cookie desea eliminar?");
+    document.cookie = nombreCookie +"=" + null + ";expires = 1 Jan 1970 23:59:59 GMT";
 }
 
 window.onload=function(){
