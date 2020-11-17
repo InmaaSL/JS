@@ -20,23 +20,23 @@ function guardar(elEvento){
     var idioma = document.getElementById("idioma").selectedIndex;
     var idiomaSelect = document.getElementById("idioma").options;
 
-    localStorage.setItem("Nombre", nombre.value);
-    localStorage.setItem("Apellidos", apellidos.value);
-    localStorage.setItem("DNI", dni.value);
-    localStorage.setItem("Idioma", idiomaSelect[idioma].text);
+    sessionStorage.setItem("Nombre", nombre.value);
+    sessionStorage.setItem("Apellidos", apellidos.value);
+    sessionStorage.setItem("DNI", dni.value);
+    sessionStorage.setItem("Idioma", idiomaSelect[idioma].text);
 
 }
 
 function recuperar(elEvento){
     mostrar.innerHTML = "";
-    for( let i = 0; i < localStorage.length; i++){
-        mostrar.innerHTML = mostrar.innerHTML + localStorage.key(i) + " - " + localStorage[localStorage.key(i)] + "</br>";
+    for( let i = 0; i < sessionStorage.length; i++){
+        mostrar.innerHTML = mostrar.innerHTML + sessionStorage.key(i) + " - " + sessionStorage[sessionStorage.key(i)] + "</br>";
     }
 }
 
 function borrar(elEvento){
-    localStorage.clear();
-    alert("¡LocalStorage borrado!")
+    sessionStorage.clear();
+    alert("SessionStorage borrado!")
     recuperar();
 }
 
