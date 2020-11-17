@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="estilos.css" rel="stylesheet" type="text/css">
+    <script src="script.js"></script>
+    <title>Formulario </title>
+</head>
+<body>
+    <div> 
+        <h2> Registrate: </h2>
+        <form action="" id="idiomas">
+            <ul>
+                <li><label for="nombre"> Nombre: <input type="text" name="nombre" id="nombre"> </label></li>
+                <li><label for="apellidos"> Apellidos: <input type="text" name="apellidos" id="apellidos"> </label></li>
+                <li><label for="dni"> DNI: <input type="text" name="dni" id="dni"> </label></li>
+                <li><label for="nombre"> Email: <input type="email" name="email" id="email"> </label></li>
+                <li><label for="idioma">Idioma seleccionado:</label> 
+                <select name="idioma" id="idioma">
+                    <li><label for="idioma"> <option value="castellano"> Castellano</option> </label></li>
+                    <li><label for="idioma"> <option value="inglés"> Inglés </option> </label></li>
+                    <li><label for="idioma"> <option value="francés"> Francés </option> </label></li>
+                </select></li>
+            </ul>
+                <div id="buttons">
+                    <input type="button" id="guardar" value="Guardar">
+                    <input type="button" id="recuperar" value="Recuperar">
+                    <input type="button" id="borrar" value="Borrar almacenamiento">
+                </div>
+        </form>
+    </div>
+
+    <div id="mostrar">
+        
+    </div>
+
+</body>
+</html>
