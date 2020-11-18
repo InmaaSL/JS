@@ -1,6 +1,9 @@
-li{
-    list-style: none;
+h2{
+    width: 50%;
 }
-li:last-child{
-    margin-top: 10px;
+
+input{
+    height: 25px;
+    float: right;
+    margin-top: 0;
 }

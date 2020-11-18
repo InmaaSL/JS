@@ -1,47 +1,34 @@
-//Fecha de caducidad de las cookies
-caduca = "31 Dec 2020 23:59:59 GMT";
-
-misCookies = idioma;
-
 function inicio(){
-    var titulo = document.getElementById('titulo');
-    var aceptar = document.getElementById('aceptar');
-    
+    var castellano = document.getElementById("castellano");
+    var ingles = document.getElementById("ingles"); 
 
+    castellano.onclick = idiomaCastellano;
+    ingles.onclick = idiomaIngles;
 
-    aceptar.onclick = cambiarIdioma;
+    var cookie = document.cookie;
+    var idioma = cookie.split("=");
 
-}
+    switch(idioma[1]){
+        case "Ingles":
+            window.location.href = "indexEN.html";
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
+            break;
+        case "Castellano":
+            window.location.href = "indexES.html";
+            break;
     }
-    return "";
 }
 
-function setCookie(cname, cvalue) {
-    document.cookie = cname + "=" + cvalue + ";" + caduca + ";path=/";
+function idiomaCastellano(elEvento){
+    document.cookie = "Idioma = Castellano; expires = Sun, 07 Nov 2021 17:42:35 GMT";
+}
+
+function idiomaIngles(elEvento){
+    document.cookie = "Idioma = Ingles; expires = Sun, 07 Nov 2021 17:42:35 GMT";
+    window.location.href = "index.html";
 }
 
 
-
-cambiarIdioma(elEvento){
-
-}
-
-
-
-
-window.onload =  function() {
-
+window.onload=function(){	
+	inicio();
 }
