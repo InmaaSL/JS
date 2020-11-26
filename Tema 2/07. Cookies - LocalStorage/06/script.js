@@ -6,8 +6,6 @@ function inicio(){
     var nombre = document.getElementById("nombre");
     var apellidos = document.getElementById("apellidos");
     var dni = document.getElementById("dni");
-    var idioma = document.getElementById("idioma").selectedIndex;
-    var idiomaSelect = document.getElementById("idioma").options;
 
     var mostrar = document.getElementById("mostrar");
 
@@ -17,13 +15,27 @@ function inicio(){
 }
 
 function guardar(elEvento){
-    var idioma = document.getElementById("idioma").selectedIndex;
-    var idiomaSelect = document.getElementById("idioma").options;
+    var idioma = document.getElementsByName("checkbox");
+    var seleccionados="";
+
+    let checked = document.querySelectorAll('input[type=checkbox]:checked');
+    
+    if (checked.length == 0) {
+        //SINO HA SELECCIONADO
+        alert("¡ERROR! No ha seleccinado ningún idioma");
+    } else {
+        for (var x = 0; x < idioma.length; x++){
+            if(idioma[x].checked){
+                console.log(idioma[x].checked);
+                seleccionados = seleccionados + idioma[x].value + " ";
+            }
+        }
+    }
 
     sessionStorage.setItem("Nombre", nombre.value);
     sessionStorage.setItem("Apellidos", apellidos.value);
     sessionStorage.setItem("DNI", dni.value);
-    sessionStorage.setItem("Idioma", idiomaSelect[idioma].text);
+    sessionStorage.setItem("Idioma", seleccionados);
 
 }
 
@@ -38,6 +50,8 @@ function borrar(elEvento){
     sessionStorage.clear();
     alert("SessionStorage borrado!")
     recuperar();
+    window.location.href = "formulario.html";
+
 }
 
 

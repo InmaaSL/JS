@@ -16,12 +16,13 @@
                 <li><label for="apellidos"> Apellidos: <input type="text" name="apellidos" id="apellidos"> </label></li>
                 <li><label for="dni"> DNI: <input type="text" name="dni" id="dni"> </label></li>
                 <li><label for="nombre"> Email: <input type="email" name="email" id="email"> </label></li>
-                <li><label for="idioma">Idioma seleccionado:</label> 
-                <select name="idioma" id="idioma">
-                    <li><label for="idioma"> <option value="castellano"> Castellano</option> </label></li>
-                    <li><label for="idioma"> <option value="inglés"> Inglés </option> </label></li>
-                    <li><label for="idioma"> <option value="francés"> Francés </option> </label></li>
-                </select></li>
+                <li><label for="idioma">Idioma seleccionado:</label></li>
+                <li><label for="idioma"><input type="checkbox" name="checkbox" id="castellano" value="Castellano"> Castellano </label>
+                                        <input type="checkbox" name="checkbox" id="ingles" value="Inglés"> Inglés </label>
+                                        <input type="checkbox" name="checkbox" id="frances" value="Francés"> Francés </label>
+                                        <input type="checkbox" name="checkbox" id="aleman" value="Alemán"> Alemán </label>
+                                        <input type="checkbox" name="checkbox" id="ruso" value="Ruso"> Ruso </label>
+                </li>
             </ul>
                 <div id="buttons">
                     <input type="button" id="guardar" value="Guardar">
@@ -35,7 +36,7 @@
         
     </div>
     <div id="explicacion">
-        <h3>Comportamiento de la página:</h3>
+        <h3>Comportamiento de la página con sessionStorage:</h3>
         Al guardar los datos y darle a salir, los datos no se quedan guardados!
     </div>
 </body>
