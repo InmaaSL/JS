@@ -103,30 +103,45 @@
     
     </div>
     <div id="factura">
-       <div id="ffac"></div>
-       <form id="miform" action="*" >
+      <div id="ffac">
+        <!-- Imagen de fruta -->
+      </div>
+      <form id="miform" action="#" >
+        <div id='campos_derecha'>
           <label for="dni">DNI: </label><input type="text" id="dni" value="" placeholder="123456789X"><br>
           <label for="ref">Ref: </label><input type="text" id="ref" value="" placeholder="ref" disabled="true"><br>
           <label for="precio">Precio: </label><input type="text" id="precio" value="" placeholder="000.00" disabled="true"><br>
           <label for="cantidad">Cantidad: </label><input type="text" id="cantidad" value="" placeholder="en KG">
-          <button id="grabar" class="mar_t_10">Grabar</button> <button id="cancelar" class="mar_t_10">Cancelar</button>
-       </form>
+        </div>
+          <button id="grabar" class="mar_t_10">Grabar</button> 
+          <button id="cancelar" class="mar_t_10">Cancelar</button>
+      </form>
 
-       <table id="lineas">
+      <table id="lineas">
           <colgroup>
-             <col><col><col><col><col><col>
+            <col><col><col><col><col><col>
           </colgroup>
+
+          <tbody>
+            <tr>
+              <th class="ancho1" >DNI</th>
+              <th class="ancho2">Ref.</th>
+              <th class="ancho3">Precio</th>
+              <th class="ancho3">Cantidad</th>
+              <th class="ancho3">Total</th>
+              <th class="ancho3">  </th>
+            </tr>
+          </tbody>
+          
           <tfoot>
               <tr>
-                 <td colspan="4">Total</td><td class="total a_derecha">0</td>
+                <td colspan="4">Total</td><td class="total a_derecha">0</td>
               </tr>
           </tfoot>
-          <tr>
-             <th class="ancho1" >DNI</th><th class="ancho2">Ref.</th><th class="ancho3">Precio</th><th class="ancho3">Cantidad</th><th class="ancho3">Total</th><th class="ancho3"></th>
-          </tr>
-     
-       </table>
-       <button id="recuperar" class="mar_t_10">Recuperar tabla</button> <button id="almacenar" class="mar_t_10">Almacenar tabla</button>    
+      </table>
+
+      <button id="recuperar" class="mar_t_10">Recuperar tabla</button> 
+      <button id="almacenar" class="mar_t_10">Almacenar tabla</button>    
     </div>
 </div>
 </body>
