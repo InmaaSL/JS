@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="estilos.css" rel="stylesheet" type="text/css">
+    <script src="script.js"></script>
+    <title>Formulario </title>
+</head>
+<body>
+    <div> 
+        <h2> Registrate: </h2>
+        <form action="" id="idiomas">
+            <ul>
+                <li><label for="nombre"> Nombre: <input type="text" name="nombre" id="nombre"> </label></li>
+                <li><label for="apellidos"> Apellidos: <input type="text" name="apellidos" id="apellidos"> </label></li>
+                <li><label for="dni"> DNI: <input type="text" name="dni" id="dni"> </label></li>
+                <li><label for="nombre"> Email: <input type="email" name="email" id="email"> </label></li>
+                <li><label for="idioma">Idioma seleccionado:</label></li>
+                <li><label for="idioma"><input type="checkbox" name="checkbox" id="castellano" value="Castellano"> Castellano </label>
+                                        <input type="checkbox" name="checkbox" id="ingles" value="Inglés"> Inglés </label>
+                                        <input type="checkbox" name="checkbox" id="frances" value="Francés"> Francés </label>
+                                        <input type="checkbox" name="checkbox" id="aleman" value="Alemán"> Alemán </label>
+                                        <input type="checkbox" name="checkbox" id="ruso" value="Ruso"> Ruso </label>
+                </li>
+            </ul>
+                <div id="buttons">
+                    <input type="button" id="guardar" value="Guardar">
+                    <input type="button" id="recuperar" value="Recuperar">
+                    <input type="button" id="borrar" value="Borrar almacenamiento">
+                </div>
+        </form>
+    </div>
+
+    <div id="mostrar">
+
+    </div>
+
+    <div id="explicacion">
+        <h3>Comportamiento de la página localStorage:</h3>
+        Al guardar los datos y darle a salir, cuando entramos y le damos a recuperar los datos siguen ahí! 
+    </div>
+
+</body>
+</html>
