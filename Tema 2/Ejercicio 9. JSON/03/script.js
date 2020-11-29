@@ -2,6 +2,9 @@ window.onload=function(){
     //Obtenemos los botones grabar y cancelar: 
     botonGrabar = document.getElementById('grabar');
     botonCancelar = document.getElementById('cancelar');
+    botonAlmacenar = document.getElementById('almacenar');
+    botonRecuperar = document.getElementById('recuperar');
+    botonEliminar = document.getElementById('eliminar');
 
     //Obtenemos el valor de los cuadrados con la fruta para cuando hagamos doble click:
     botones = document.getElementsByClassName('fpeque');
@@ -14,9 +17,13 @@ window.onload=function(){
     //Click: 
     botonGrabar.onclick = anyadirFila;
     botonCancelar.onclick = limpiarForm;
+    botonAlmacenar.onclick = almacenarTabla;
+    botonEliminar.onclick = borrarAlmacenamiento;
+    botonRecuperar.onclick = recuperarAlmacenamiento;
+
 }
 
-function ponerImagen(elEvento){
+function ponerImagen(){
     //Tener en cuenta que this hace referencia al objeto en el que estamos haciendo dobleclick!
     //InnerText-> obtenemos el texto que hay dentro de un elemento.
     //getAttribute -> obtenemos el valor del atributo que se selecciona.
@@ -75,7 +82,7 @@ function nif(dni) {
     }
 }
 
-function validarCampos(elEvento){
+function validarCampos(){
 
     cantidad.style.backgroundColor = "#FFF";
 	dni.style.backgroundColor = "#FFF";
@@ -99,7 +106,7 @@ function validarCampos(elEvento){
 	return resultado;
 }
 
-function limpiarForm(elEvento){
+function limpiarForm(){
     //Obtenemos el formulario y lo ponemos en blanco: 
 	form = document.getElementById('miform');
 	form.reset();
@@ -234,6 +241,151 @@ function anyadirFila(){
 }
 
 function borraFila(){
-	this.parentNode.remove();
+    this.parentNode.remove();
 	calculaTotal();
+}
+
+function almacenarTabla(){
+    //Primero borramos lo que haya y así guardamos actualizando los datos: 
+    localStorage.clear();
+    
+    //Recogemos en una variable los datos importantes:
+    total = document.getElementsByClassName('total');
+
+    miObj = {dni, ref, precio, cantidad, total};
+
+    //Obtenemos la tabla:
+    tabla = document.getElementsByTagName("tbody")[0];
+    
+    //Obtenemos cada fila de la tabla que nos interesa: 
+    filas = tabla.getElementsByClassName("nuevo_Articulo");
+    
+    //Nos quedamos solo con los artículos y no con la "fila enunciado":
+    articulos = filas.length;
+
+    //Calculamos:
+    //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
+    //Obtenemos el valor de la celda que tiene como clase total.  
+    //parseFloat ->  convertir una cadena en un número.
+    if (articulos > 0) {
+        if(articulos > 0){		
+            for (var i = 0; i < articulos; i++) {	
+                miObj.dni = filas[i].getElementsByClassName('dni')[0].innerText;
+                miObj.ref = filas[i].getElementsByClassName('ref')[0].innerText;
+                miObj.precio = filas[i].getElementsByClassName('precio')[0].innerText;
+                miObj.cantidad = filas[i].getElementsByClassName('cantidad')[0].innerText;
+                miObj.total = filas[i].getElementsByClassName('total')[0].innerText;
+
+                localStorage.setItem('pedido['+i+']', JSON.stringify(miObj));
+            }
+            alert('Datos almacenados correctamente')
+        }	
+    } else {
+        alert('No hay productos que almacenar');
+    }
+}
+
+function borrarAlmacenamiento(){
+    //Comprobamos previamente que haya algo almacenado en el localstorage:
+    //Para ello recogemos en una variable el numero de elementos guardados en el storage:
+    cantidadItems = localStorage.length;
+    if(cantidadItems > 0){
+        localStorage.clear();
+        alert("¡LocalStorage borrado!")
+        window.location.href = "index.html";
+    } else {
+        alert('No se encuentran datos en el registro');
+    }
+}
+
+function recuperarAlmacenamiento(){
+    //Obtenemos primero la cantidad de elementos guardados en el storage:
+    cantidadItems = localStorage.length;
+
+    //Obtenemos la tabla:
+    tabla = document.getElementsByTagName("tbody")[0];
+    
+    //Obtenemos cada fila de la tabla que nos interesa: 
+    filas = tabla.getElementsByClassName("nuevo_Articulo");
+    
+    //Nos quedamos solo con los artículos y no con la "fila enunciado":
+    articulos = filas.length;
+
+    if(cantidadItems > 0){
+        if(articulos == 0){
+            for (var i = 0; i < cantidadItems; i++) {	
+            //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
+            miObj = JSON.parse(localStorage.getItem('pedido['+i+']')); 
+    
+                //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
+                tbody = document.getElementsByTagName('tbody')[0];
+        
+                //Creamos la fila: 
+                nuevaFila = document.createElement('tr');
+                nuevaFila.setAttribute('class', 'nuevo_Articulo');
+    
+                //Añadimos la primera celda DNI:
+                nuevaCeldaDNI = document.createElement('td');
+                nuevaCeldaDNI.setAttribute('class', 'dni');
+                contenidoDNI = document.createTextNode(miObj.dni);
+                nuevaCeldaDNI.appendChild(contenidoDNI);
+                nuevaFila.appendChild(nuevaCeldaDNI);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                //Añadimos la segunda celda REFERNCIA:
+                nuevaCeldaREF = document.createElement('td');
+                nuevaCeldaREF.setAttribute('class', 'ref');
+                contenidoREF = document.createTextNode(miObj.ref);
+                nuevaCeldaREF.appendChild(contenidoREF);
+                nuevaFila.appendChild(nuevaCeldaREF);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+                
+                //Añadimos la tercera celda PRECIO:
+                nuevaCeldaPRE = document.createElement('td');
+                nuevaCeldaPRE.setAttribute('class', 'precio');
+                contenidoPRE = document.createTextNode(miObj.precio);
+                nuevaCeldaPRE.appendChild(contenidoPRE);
+                nuevaFila.appendChild(nuevaCeldaPRE);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                //Añadimos la cuarta celda CANTIDAD:
+                nuevaCeldaCAN = document.createElement('td');
+                nuevaCeldaCAN.setAttribute('class', 'cantidad');
+                contenidoCAN = document.createTextNode(miObj.cantidad);
+                nuevaCeldaCAN.appendChild(contenidoCAN);
+                nuevaFila.appendChild(nuevaCeldaCAN);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                //Añadimos la quinta celda TOTAL:
+                nuevaCeldaTOT = document.createElement('td');
+                nuevaCeldaTOT.setAttribute('class', 'total');
+                contenidoTOT = document.createTextNode(miObj.total);
+                nuevaCeldaTOT.appendChild(contenidoTOT);
+                nuevaFila.appendChild(nuevaCeldaTOT);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                //Añadimos la cuarta celda BOTON:
+                nuevaCeldaBOT = document.createElement('td');
+                nuevaCeldaBOT.setAttribute('class', 'celda');
+                nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
+                nuevaFila.appendChild(nuevaCeldaBOT);
+                tbody.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
+                nuevaCeldaBOT.addEventListener("click",borraFila);
+            } 
+
+        }else {
+            alert('Almacenamiento recuperado');
+        }
+
+    } else {
+        alert('No hay informacion en el Storage')
+    }
 }
