@@ -3,9 +3,6 @@ window.onload=function(){
     botonGrabar = document.getElementById('grabar');
     botonCancelar = document.getElementById('cancelar');
 
-
-
-
     //Obtenemos el valor de los cuadrados con la fruta para cuando hagamos doble click:
     botones = document.getElementsByClassName('fpeque');
 
@@ -112,25 +109,26 @@ function limpiarForm(elEvento){
 }
 
 function calculaTotal(){
+
     //Declaramos una variable en 0:
 	let	totalPedido = 0;
 
     //Obtenemos la tabla:
-    tabla = document.getElementById("lineas");
+    tabla = document.getElementsByTagName("tbody")[0];
     
-    //Obtenemos cada fila de la tabla: 
-    filas = tabla.getElementsByTagName("tr");
+    //Obtenemos cada fila de la tabla que nos interesa: 
+    filas = tabla.getElementsByClassName("nuevo_Articulo");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
-    articulos = filas.length - 2;
+    articulos = filas.length;
 
     //Calculamos:
-    //Comenzamos con 1 ya que fila[0] sería el enunciado de la tabla.
-    //Obtenemos el valor de la 4 posición ya que es donde está el total. 
+    //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
+    //Obtenemos el valor de la celda que tiene como clase total.  
     //parseFloat ->  convertir una cadena en un número.
-	if(articulos > 2){		
-		for (var i = 2; i < articulos; i++) {			
-			subtotal = filas[i].getElementsByTagName("td")[4].innerText;
+	if(articulos > 0){		
+		for (var i = 0; i < articulos; i++) {	
+			subtotal = filas[i].getElementsByClassName('total')[0].innerText;
 			totalPedido += parseFloat(subtotal);		 
 		}
 	}	
@@ -143,7 +141,6 @@ function calculaTotal(){
 }
 
 function anyadirFila(){
-
     //Obtenemos el cuadrado donde va a ir la imagne: 
     huecoFruta = document.getElementById('ffac');
 
@@ -162,56 +159,69 @@ function anyadirFila(){
 			precio = document.getElementById("precio");
 			cantidad = document.getElementById("cantidad");
 			
-			//Para ir añanadiendo filas primero cogemos la tabla:  
-			tabla = document.getElementById("lineas");
+			//Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
+            tbody = document.getElementsByTagName('tbody')[0];
             
             //Creamos la fila: 
             nuevaFila = document.createElement('tr');
+            nuevaFila.setAttribute('class', 'nuevo_Articulo');
 
             //Añadimos la primera celda DNI:
             nuevaCeldaDNI = document.createElement('td');
+            nuevaCeldaDNI.setAttribute('class', 'celda');
             contenidoDNI = document.createTextNode(dni.value);
             nuevaCeldaDNI.appendChild(contenidoDNI);
             nuevaFila.appendChild(nuevaCeldaDNI);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
 
             //Añadimos la segunda celda REFERNCIA:
             nuevaCeldaREF = document.createElement('td');
+            nuevaCeldaREF.setAttribute('class', 'celda');
             contenidoREF = document.createTextNode(referencia.value);
             nuevaCeldaREF.appendChild(contenidoREF);
             nuevaFila.appendChild(nuevaCeldaREF);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
             
             //Añadimos la tercera celda PRECIO:
             nuevaCeldaPRE = document.createElement('td');
+            nuevaCeldaPRE.setAttribute('class', 'celda');
             contenidoPRE = document.createTextNode(precio.value);
             nuevaCeldaPRE.appendChild(contenidoPRE);
             nuevaFila.appendChild(nuevaCeldaPRE);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
 
             //Añadimos la cuarta celda CANTIDAD:
             nuevaCeldaCAN = document.createElement('td');
+            nuevaCeldaCAN.setAttribute('class', 'celda');
             contenidoCAN = document.createTextNode(cantidad.value);
             nuevaCeldaCAN.appendChild(contenidoCAN);
             nuevaFila.appendChild(nuevaCeldaCAN);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
 
             //Añadimos la quinta celda TOTAL:
             nuevaCeldaTOT = document.createElement('td');
+            nuevaCeldaTOT.setAttribute('class', 'total');
             total = (parseFloat(cantidad.value) * parseFloat(precio.value)).toFixed(2);
             contenidoTOT = document.createTextNode(total);
             nuevaCeldaTOT.appendChild(contenidoTOT);
             nuevaFila.appendChild(nuevaCeldaTOT);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
 
             //Añadimos la cuarta celda BOTON:
             nuevaCeldaBOT = document.createElement('td');
+            nuevaCeldaBOT.setAttribute('class', 'celda');
             nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
             nuevaFila.appendChild(nuevaCeldaBOT);
-            tabla.appendChild(nuevaFila);
+            tbody.appendChild(nuevaFila);
+            //tabla.appendChild(nuevaFila);
 
             //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
-            nuevaCeldaBOT.addEventListener("click",borraFila);	
+            nuevaCeldaBOT.addEventListener("click",borraFila);
 
             limpiarForm();
         }
@@ -219,7 +229,6 @@ function anyadirFila(){
         alert("No has seleccionado producto");	
     }	
     calculaTotal();	
-
 
 }
 
