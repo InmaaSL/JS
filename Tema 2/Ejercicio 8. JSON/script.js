@@ -1,7 +1,10 @@
 window.onload=function(){
     //Obtenemos los botones grabar y cancelar: 
-    var botonGrabar = document.getElementById('grabar');
-    var botonCancelar = document.getElementById('cancelar');
+    botonGrabar = document.getElementById('grabar');
+    botonCancelar = document.getElementById('cancelar');
+
+
+
 
     //Obtenemos el valor de los cuadrados con la fruta para cuando hagamos doble click:
     botones = document.getElementsByClassName('fpeque');
@@ -17,6 +20,11 @@ window.onload=function(){
 }
 
 function ponerImagen(elEvento){
+    //Tener en cuenta que this hace referencia al objeto en el que estamos haciendo dobleclick!
+    //InnerText-> obtenemos el texto que hay dentro de un elemento.
+    //getAttribute -> obtenemos el valor del atributo que se selecciona.
+    //setAttribute -> otorgamos nosotros el valor del atributo, en este caso es una imagen a la que le ponemos el SRC.
+    //hasChildNodes -> si tiene hijos el nodo, devuelve true o false. 
 
     //Seleccionamos el nombre de la fruta a través del id: 
     frutaSeleccionada = this.getAttribute('id');
@@ -31,7 +39,7 @@ function ponerImagen(elEvento){
     //Comprobamos si ya hay una imagen, para que la reemplace si existe y ponga la nueva: 
     if (huecoFruta.hasChildNodes()) {
         //Reemplazamos la iamgen que haya:
-        huecoFruta.replaceChild(nuevaImagen, huecoFruta.childNodes[0]);
+        huecoFruta.replaceChild(nuevaImagen, huecoFruta.firstChild);
     } else {
         huecoFruta.appendChild(nuevaImagen);
     }
@@ -73,19 +81,18 @@ function validarCampos(elEvento){
 
     cantidad.style.backgroundColor = "#FFF";
 	dni.style.backgroundColor = "#FFF";
-	//let pNumero = /^\d*$/gi;
 	
 	let resultado = true;
     
-    //Comprobamos primero que la cantidad sea un número y que sea mayor que 0:
-	if( isNaN (cantidad.value) || cantidad.value.length == 0){
+    //Comprobamos primero que la cantidad sea un número y que sea distinta de 0:
+	if( isNaN (cantidad.value) || cantidad.value == 0){
 		cantidad.style.backgroundColor = "rgba(255,155,155,0.4)";
 		cantidad.focus();
 		resultado = false;
     }
 
     //Comprobamos el DNI usando nuestra función: 
-	if(dni.value.length == 0 || nif(dni.value) == false){
+	if(dni.value == 0 || nif(dni.value) == false){
 		dni.style.backgroundColor = "rgba(255,155,155,0.4)";
 		dni.focus();
 		resultado = false;		
@@ -101,7 +108,7 @@ function limpiarForm(elEvento){
     
     //Dejamos libre el hueco de la fruta:
 	huecoFruta = document.getElementById('ffac');
-	huecoFruta.childNodes[0].remove();
+	huecoFruta.firstChild.remove();
 }
 
 function calculaTotal(){
@@ -109,24 +116,28 @@ function calculaTotal(){
 	let	totalPedido = 0;
 
     //Obtenemos la tabla:
-	tabla = document.getElementById("lineas");
+    tabla = document.getElementById("lineas");
     
     //Obtenemos cada fila de la tabla: 
-	filas = tabla.getElementsByTagName("tr");
+    filas = tabla.getElementsByTagName("tr");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
-	articulos = filas.length-1;
+    articulos = filas.length - 2;
 
     //Calculamos:
-	if(articulos > 1){		
-		for (var i = 1; i < articulos; i++) {			
+    //Comenzamos con 1 ya que fila[0] sería el enunciado de la tabla.
+    //Obtenemos el valor de la 4 posición ya que es donde está el total. 
+    //parseFloat ->  convertir una cadena en un número.
+	if(articulos > 2){		
+		for (var i = 2; i < articulos; i++) {			
 			subtotal = filas[i].getElementsByTagName("td")[4].innerText;
 			totalPedido += parseFloat(subtotal);		 
 		}
 	}	
 
     //Insertamos en la casilla correspondiente: 
-	casillaTotal = document.getElementsByClassName("total a_derecha");
+    casillaTotal = document.getElementsByClassName("total a_derecha");
+    casillaTotal[0].style.color = 'red';
 	casillaTotal[0].innerHTML = totalPedido + "€";
 
 }
@@ -139,51 +150,76 @@ function anyadirFila(){
     //Obtenemos el resultado de validar: 
 	resultado = validarCampos();
 
+    //Igual que en el punto anterio, comprobamos si hay una iamgen metida dentro del div correspondiente 
+    //de esta manera comprobamos que si hay o no un elemento. 
     if (huecoFruta.hasChildNodes()) {
+        //Si las validaciones dan true, es decir, todo está correcto, procedemos a introducir los valores: 
         if(resultado){
+            //Cogemos primero las variables importantes para el proceso: 
 			form = document.getElementById('miform');
 			dni = document.getElementById("dni");
 			referencia = document.getElementById("ref");
 			precio = document.getElementById("precio");
 			cantidad = document.getElementById("cantidad");
 			
-			//Crear nueva fila 
+			//Para ir añanadiendo filas primero cogemos la tabla:  
 			tabla = document.getElementById("lineas");
-			
-			nuevaFila = tabla.insertRow(1);
-			
-			nuevaCelda = nuevaFila.insertCell(0); 
-			valorCelda = document.createTextNode(dni.value);
-			nuevaCelda.appendChild(valorCelda);
-
-			nuevaCelda = nuevaFila.insertCell(1); 
-			valorCelda = document.createTextNode(referencia.value);
-			nuevaCelda.appendChild(valorCelda);
-
-			nuevaCelda = nuevaFila.insertCell(2); 
-			valorCelda = document.createTextNode(precio.value);
-			nuevaCelda.appendChild(valorCelda);
-
-			nuevaCelda = nuevaFila.insertCell(3); 
-			valorCelda = document.createTextNode(cantidad.value);
-			nuevaCelda.appendChild(valorCelda);
-
-			nuevaCelda = nuevaFila.insertCell(4);		
-			total = (parseFloat(cantidad.value) * parseFloat(precio.value)).toFixed(2); 
-			valorCelda = document.createTextNode(total);
-			nuevaCelda.appendChild(valorCelda);
-
-			nuevaCelda = nuevaFila.insertCell(5);
-			nuevaCelda.innerHTML = '<button class="boton">Borrar</button>';		
-            nuevaCelda.addEventListener("click",borraFila);
             
+            //Creamos la fila: 
+            nuevaFila = document.createElement('tr');
+
+            //Añadimos la primera celda DNI:
+            nuevaCeldaDNI = document.createElement('td');
+            contenidoDNI = document.createTextNode(dni.value);
+            nuevaCeldaDNI.appendChild(contenidoDNI);
+            nuevaFila.appendChild(nuevaCeldaDNI);
+            tabla.appendChild(nuevaFila);
+
+            //Añadimos la segunda celda REFERNCIA:
+            nuevaCeldaREF = document.createElement('td');
+            contenidoREF = document.createTextNode(referencia.value);
+            nuevaCeldaREF.appendChild(contenidoREF);
+            nuevaFila.appendChild(nuevaCeldaREF);
+            tabla.appendChild(nuevaFila);
+            
+            //Añadimos la tercera celda PRECIO:
+            nuevaCeldaPRE = document.createElement('td');
+            contenidoPRE = document.createTextNode(precio.value);
+            nuevaCeldaPRE.appendChild(contenidoPRE);
+            nuevaFila.appendChild(nuevaCeldaPRE);
+            tabla.appendChild(nuevaFila);
+
+            //Añadimos la cuarta celda CANTIDAD:
+            nuevaCeldaCAN = document.createElement('td');
+            contenidoCAN = document.createTextNode(cantidad.value);
+            nuevaCeldaCAN.appendChild(contenidoCAN);
+            nuevaFila.appendChild(nuevaCeldaCAN);
+            tabla.appendChild(nuevaFila);
+
+            //Añadimos la quinta celda TOTAL:
+            nuevaCeldaTOT = document.createElement('td');
+            total = (parseFloat(cantidad.value) * parseFloat(precio.value)).toFixed(2);
+            contenidoTOT = document.createTextNode(total);
+            nuevaCeldaTOT.appendChild(contenidoTOT);
+            nuevaFila.appendChild(nuevaCeldaTOT);
+            tabla.appendChild(nuevaFila);
+
+            //Añadimos la cuarta celda BOTON:
+            nuevaCeldaBOT = document.createElement('td');
+            nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
+            nuevaFila.appendChild(nuevaCeldaBOT);
+            tabla.appendChild(nuevaFila);
+
+            //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
+            nuevaCeldaBOT.addEventListener("click",borraFila);	
 
             limpiarForm();
         }
     } else {
         alert("No has seleccionado producto");	
     }	
-	calculaTotal();	
+    calculaTotal();	
+
 
 }
 
