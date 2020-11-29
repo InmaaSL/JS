@@ -6,9 +6,9 @@ var cursos = '['+
 ']';
 
 window.onload = function(){
-    mostrar = document.getElementById('cargar');
+    cargar = document.getElementById('cargar');
     //Probamos nueva forma de llamar a los eventos: 
-    mostrar.addEventListener('click', cargarJSON);
+    cargar.addEventListener('click', cargarJSON);
 }
 
 function cargarJSON(){
@@ -17,9 +17,16 @@ function cargarJSON(){
     //Generamos una varibale que almacenará el mensaje:
     mensaje = "";
 
+    var lista = document.createElement('ul');
+    
     //Recorremos el objeto para que muestre todas las parejas:
     for (let i = 0; i < miObj.length; i++){
-        document.getElementById('mostrar').innerHTML = 
-        mensaje += miObj[i].iniciales + " - " + miObj[i].titulo + "<br>";
+        var punto = document.createElement('li');
+        var mensaje = document.createTextNode(miObj[i].iniciales + " - " + miObj[i].titulo);
+        punto.appendChild(mensaje);
+        lista.appendChild(punto);
     }
+
+    var mostrar = document.getElementById('mostrar');
+    mostrar.appendChild(lista);
 }
