@@ -23,37 +23,43 @@ function validarDNI(dni){
         //Operación que obtiene la posición de la letra en el DNI:
         numero = numero % 23;
 
-        letra='TRWAGMYFPDXBNJZSQVHLCKET';
-        letra=letra.substring(numero,numero+1);
+        letra ='TRWAGMYFPDXBNJZSQVHLCKET';
+        letra = letra.substring(numero,numero+1);
 
         if (letra!=letr.toUpperCase()) {
             return false; 
         }
+    } else {
+        return false;
     }
 }
 
 function validarFechaNacimiento(fecha){
-	var fechaSplit = fecha.split("/");
-	var dia = parseInt(fechaSplit[0]);
-	var mes = parseInt(fechaSplit[1]);
-	var anyo = parseInt(fechaSplit[2]);
-	var fecha = new Date(anyo,mes,'0');
 
-	if (!isNaN(dia) && anyo > 1900) {
-		if((dia)>(fecha.getDate() || dia < 1)){
-			return false;
-		}	
-		return true;
-	} else 
-		return false;
+    var fechaSplit = fecha.split("/");
+        var dia = fechaSplit[0];
+        var mes = fechaSplit[1];
+        var anyo = fechaSplit[2];
+        var date = new Date(anyo,mes,'0');
+        if (!isNaN(dia) && anyo > 1900) {
+            if((dia-0)>(date.getDate()-0)){
+                return false;
+            }
+            return true;
+        }
 }
 
 function validarEmail(email) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(email)){
-        return true;
-    } else {
-        return false; 
-    }
+    if (email.indexOf('@') > -1 && email.indexOf('.') > -1 )
+    return true;
+    
+else 
+    return false;
+    // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(email)){
+    //     return true;
+    // } else {
+    //     return false; 
+    // }
 }
 
 function validarContrasenya(contrasenyaP, contrasenyaR){
@@ -96,18 +102,18 @@ function validarCampos(){
     let contrasenyaP = document.getElementById('contrasenyaP'); 
     let contrasenyaR = document.getElementById('contrasenyaR');
 
-    //REcogemos los campos donde anoraremos errores: 
-    // let nombreError = document.getElementById('errorNombre');
-    // let apellidosError = document.getElementById('errorApellidos');
-    // let dniError = document.getElementById('errorDNI');
-    // let fechaNacError = document.getElementById('errorFechaNac');
-    // let emailError = document.getElementById('errorEmail');
-    // let contrasenyaPError = document.getElementById('ErrorContrasenyaP'); 
-    // let contrasenyaRError = document.getElementById('ErrorContrasenyaR');
+    //Recogemos los campos donde anoraremos errores: 
+    let nombreError = document.getElementById('errorNombre');
+    let apellidosError = document.getElementById('errorApellidos');
+    let dniError = document.getElementById('errorDNI');
+    let fechaNacError = document.getElementById('errorFechaNac');
+    let emailError = document.getElementById('errorEmail');
+    let contrasenyaPError = document.getElementById('errorContrasenyaP'); 
+    let contrasenyaRError = document.getElementById('errorContrasenyaR');
 
     //Ponemos colores para fallo:
-    nombre.style.backgroundColor = "#FFF";
-	dni.style.backgroundColor = "#FFF";
+    // nombre.style.backgroundColor = "#FFF";
+	// dni.style.backgroundColor = "#FFF";
     
     //Asignamos una variable para comprobar el estado de las validaciones: 
     let resultado = true;
@@ -116,53 +122,69 @@ function validarCampos(){
     if (nombre.value == null || nombre.value.length == 0 || /^\s+$/.test(nombre.value)) {
         nombre.style.backgroundColor = "rgba(255,155,155,0.4)";
         nombre.focus();
-        // nombreError.innerHTML = "El nombre no puede estar vacío";
+        nombreError.innerHTML = "El nombre no puede estar vacío";
 		resultado = false;
+    } else {
+        nombreError.innerHTML = "";
     }
 
     if (apellidos.value == null || apellidos.value.length == 0 || /^\s+$/.test(apellidos.value)) {
         apellidos.style.backgroundColor = "rgba(255,155,155,0.4)";
         apellidos.focus();
-        // apellidosError.innerHTML = "Los apellidos no pueden estar vacíos";
+        apellidosError.innerHTML = "Los apellidos no pueden estar vacíos";
 		resultado = false;
+    } else {
+        apellidosError.innerHTML = "";
     }
     
     //Comprobamos el DNI usando la función correspondiente: 
 	if(dni.value == 0 || validarDNI(dni.value) == false){
 		dni.style.backgroundColor = "rgba(255,155,155,0.4)";
         dni.focus();
-        // dniError.innerHTML = "Hay un error en su DNI";
+        dniError.innerHTML = "Hay un error en su DNI";
 		resultado = false;		
-    }	
+    } else {
+        dniError.innerHTML = "";
+    }
 
     //Validamos fecha de nacimiento usando la función correspondiente: 
     if (fechaNac.value == 0 || validarFechaNacimiento(fechaNac.value) == false){
         fechaNac.style.backgroundColor = "rgba(255,155,155,0.4)";
         fechaNac.focus();
-        // fechaNacError.innerHTML = "Debe usted introducir una fecha";
+        fechaNacError.innerHTML = "Debe usted introducir una fecha";
 		resultado = false;	
+    } else {
+        fechaNacError.innerHTML = "";
     }
 
     //Validamos el correo electrónico:
     if (email.value == 0 || validarEmail(email.value) == false){
         email.style.backgroundColor = "rgba(255,155,155,0.4)";
         email.focus();
-        // emailError.innerHTML = "Introduzca su email";
+        emailError.innerHTML = "Introduzca su email";
 		resultado = false;
+    } else {
+        emailError.innerHTML = "";
     }
 
     //Validamos la primera contraseña: 
     if(validarContrasenya(contrasenyaP, contrasenyaR) == false){
         contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
         contrasenyaP.focus();
-        // contrasenyaPError.innerHTML = "Introduzca una contraseña válida";
+        contrasenyaPError.innerHTML = "Introduzca una contraseña válida";
         contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
         contrasenyaR.focus();
-        // contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
+        contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
 
 		resultado = false;
+    } else {
+        contrasenyaPError.innerHTML = "";
+        contrasenyaRError.innerHTML = "";
     }
+    
+
     
     return resultado;
     
+    // dniError.innerHTML = "";
 }

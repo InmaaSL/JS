@@ -72,6 +72,8 @@ function nif(dni) {
         if (letra!=letr.toUpperCase()) {
             return false; 
         }
+    } else {
+        return false; 
     }
 }
 
