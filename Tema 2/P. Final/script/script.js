@@ -1,22 +1,23 @@
+//Variable que usamos para poder ir agregando clientes al localStorage:
+i = 0;
+
+id = 1;
+if (localStorage.length != 0){
+        id = 1;
+}
+
 window.onload = function(){
     //Botones formulario: 
+    btnCancelar = document.getElementById('cancelar');
     btnGuardar = document.getElementById('guardar');
     btnGestion = document.getElementById('gestion'); 
-
-    //Variable que usamos para poder ir agregando clientes al localStorage:
-    i = 0;
-
-    //variable para asignar un id a cada cliente:
-    id = 1;
-    if (localStorage.length != 0){
-            id = 1;
-    }
-
+    
+    
     //Funciones en funcionamiento: 
+    btnCancelar.onclick = limpiarForm;
     btnGuardar.onclick = almacenarClientes;
     btnGestion.addEventListener("click", gestionClientes);
-    btnGestion.addEventListener("click", recuperarAlmacenamiento);
-
+    
 }
 
 function gestionClientes(){
@@ -29,19 +30,19 @@ function validarDNI(dni){
     var letr;
     var letra;
     var expresion_regular_dni;
-
+    
     expresion_regular_dni = /^\d{8}[a-zA-Z]$/;
-
+    
     if(expresion_regular_dni.test(dni) == true){
         numero = dni.substr(0,dni.length-1);
         letr = dni.substr(dni.length-1,1);
-
+        
         //Operación que obtiene la posición de la letra en el DNI:
         numero = numero % 23;
-
+        
         letra ='TRWAGMYFPDXBNJZSQVHLCKET';
         letra = letra.substring(numero,numero+1);
-
+        
         if (letra!=letr.toUpperCase()) {
             return false; 
         }
@@ -52,15 +53,15 @@ function validarDNI(dni){
 
 function validarFechaNacimiento(fecha){
     var fechaSplit = fecha.split("/");
-        var dia = fechaSplit[0];
-        var mes = fechaSplit[1];
-        var anyo = fechaSplit[2];
-        var date = new Date(anyo,mes,'0');
-        if (!isNaN(dia) && anyo > 1900) {
-            if((dia-0)>(date.getDate()-0)){
-                return false;
-            }
+    var dia = fechaSplit[0];
+    var mes = fechaSplit[1];
+    var anyo = fechaSplit[2];
+    var date = new Date(anyo,mes,'0');
+    if (!isNaN(dia) && anyo > 1900) {
+        if((dia-0)>(date.getDate()-0)){
+            return false;
         }
+    }
 }
 
 function validarEmail(email) {
@@ -73,7 +74,7 @@ function validarContrasenya(contrasenya){
     var minuscula = false;
     var numero = false;
     var caracter_raro = false;
-
+    
     if(contrasenya.length >= 8){		
         for(var i = 0;i<contrasenya.length;i++){
             if(contrasenya.charCodeAt(i) >= 65 && contrasenya.charCodeAt(i) <= 90){
@@ -86,13 +87,13 @@ function validarContrasenya(contrasenya){
                 caracter_raro = true;
             }
         }
-
+        
         if(mayuscula == true && minuscula == true && caracter_raro == true && numero == true){
             return true;
         }
     }
     return false;
-
+    
 }
 
 function validarCampos(){
@@ -104,7 +105,7 @@ function validarCampos(){
     let email = document.getElementById('email');
     let contrasenyaP = document.getElementById('contrasenyaP'); 
     let contrasenyaR = document.getElementById('contrasenyaR');
-
+    
     //Recogemos los campos donde anoraremos errores: 
     let nombreError = document.getElementById('errorNombre');
     let apellidosError = document.getElementById('errorApellidos');
@@ -113,7 +114,7 @@ function validarCampos(){
     let emailError = document.getElementById('errorEmail');
     let contrasenyaPError = document.getElementById('errorContrasenyaP'); 
     let contrasenyaRError = document.getElementById('errorContrasenyaR');
-
+    
     // Ponemos colores para fallo:
     nombre.style.backgroundColor = "#FFF";
 	dni.style.backgroundColor = "#FFF";
@@ -130,7 +131,7 @@ function validarCampos(){
     } else {
         nombreError.innerHTML = "";
     }
-
+    
     if (apellidos.value == null || apellidos.value.length == 0 || /^\s+$/.test(apellidos.value)) {
         apellidos.style.backgroundColor = "rgba(255,155,155,0.4)";
         apellidos.focus();
@@ -142,14 +143,14 @@ function validarCampos(){
     
     //Comprobamos el DNI usando la función correspondiente: 
 	if(dni.value == 0 || validarDNI(dni.value) == false){
-		dni.style.backgroundColor = "rgba(255,155,155,0.4)";
+        dni.style.backgroundColor = "rgba(255,155,155,0.4)";
         dni.focus();
         dniError.innerHTML = "Hay un error en su DNI";
 		resultado = false;		
     } else {
         dniError.innerHTML = "";
     }
-
+    
     //Validamos fecha de nacimiento usando la función correspondiente: 
     if (fechaNac.value == 0 || validarFechaNacimiento(fechaNac.value) == false){
         fechaNac.style.backgroundColor = "rgba(255,155,155,0.4)";
@@ -159,7 +160,7 @@ function validarCampos(){
     } else {
         fechaNacError.innerHTML = "";
     }
-
+    
     //Validamos el correo electrónico:
     if (email.value == 0 || validarEmail(email.value) == false){
         email.style.backgroundColor = "rgba(255,155,155,0.4)";
@@ -169,18 +170,18 @@ function validarCampos(){
     } else {
         emailError.innerHTML = "";
     }
-
+    
     //Validamos la primera contraseña: 
     if(validarContrasenya(contrasenyaP.value) == false){
         contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
         contrasenyaP.focus();
         contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
-
+        
 		resultado = false;
     } else {
         contrasenyaPError.innerHTML = "";
     }
-
+    
     //Validamos segunda contraseña: 
     if(contrasenyaR.value != contrasenyaP.value){
         contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
@@ -203,7 +204,8 @@ function limpiarForm(){
 function almacenarClientes(){
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
     resultado = validarCampos();
-    
+
+//variable para asignar un id a cada cliente:
     //Recogemos las variables necesarias:
     let nombre = document.getElementById('nombre');
     let apellidos = document.getElementById('apellidos');
@@ -216,95 +218,16 @@ function almacenarClientes(){
         
         //Creamos un array con los objetos que vamos a usar:
         cliente = { id, nombre, apellidos, dni, fechaNac, email, contrasenyaP};
-            cliente.id = id;
-            cliente.nombre = nombre.value;
-            cliente.apellidos = apellidos.value;
-            cliente.dni = dni.value;
-            cliente.fechaNac = fechaNac.value;
-            cliente.email = email.value; 
-            cliente.contrasenya = contrasenyaP.value;
-
+        cliente.id = id;
+        cliente.nombre = nombre.value;
+        cliente.apellidos = apellidos.value;
+        cliente.dni = dni.value;
+        cliente.fechaNac = fechaNac.value;
+        cliente.email = email.value; 
+        cliente.contrasenya = contrasenyaP.value;
+        
             localStorage.setItem('cliente['+i+']', JSON.stringify(cliente));
     }
     i++;
     id++;
-}
-
-function recuperarAlmacenamiento(){
-    //Obtenemos primero la cantidad de elementos guardados en el storage:
-    cantidadItems = localStorage.length;
-
-    //Obtenemos la tabla:
-    tabla = document.getElementsByTagName("table")[0];
-
-    if(cantidadItems > 0){
-            for (var i = 0; i < cantidadItems; i++) {	
-            //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
-            miObj = JSON.parse(localStorage.getItem('cliente['+i+']')); 
-    
-                // //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
-                // tbody = document.getElementsByTagName('tbody')[0];
-        
-                //Creamos la fila: 
-                nuevaFila = document.createElement('tr');
-                nuevaFila.setAttribute('class', 'nuevo_Articulo');
-    
-                //Añadimos la primera celda nombre:
-                nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'nombre');
-                contenido = document.createTextNode(miObj.nombre);
-                nuevaCelda.appendChild(contenido);
-                nuevaFila.appendChild(nuevaCelda);
-                tabla.appendChild(nuevaFila);
-                //tabla.appendChild(nuevaFila);
-    
-                // //Añadimos la segunda celda REFERNCIA:
-                // nuevaCeldaREF = document.createElement('td');
-                // nuevaCeldaREF.setAttribute('class', 'ref');
-                // contenidoREF = document.createTextNode(miObj.ref);
-                // nuevaCeldaREF.appendChild(contenidoREF);
-                // nuevaFila.appendChild(nuevaCeldaREF);
-                // tbody.appendChild(nuevaFila);
-                // //tabla.appendChild(nuevaFila);
-                
-                // //Añadimos la tercera celda PRECIO:
-                // nuevaCeldaPRE = document.createElement('td');
-                // nuevaCeldaPRE.setAttribute('class', 'precio');
-                // contenidoPRE = document.createTextNode(miObj.precio);
-                // nuevaCeldaPRE.appendChild(contenidoPRE);
-                // nuevaFila.appendChild(nuevaCeldaPRE);
-                // tbody.appendChild(nuevaFila);
-                // //tabla.appendChild(nuevaFila);
-    
-                // //Añadimos la cuarta celda CANTIDAD:
-                // nuevaCeldaCAN = document.createElement('td');
-                // nuevaCeldaCAN.setAttribute('class', 'cantidad');
-                // contenidoCAN = document.createTextNode(miObj.cantidad);
-                // nuevaCeldaCAN.appendChild(contenidoCAN);
-                // nuevaFila.appendChild(nuevaCeldaCAN);
-                // tbody.appendChild(nuevaFila);
-                // //tabla.appendChild(nuevaFila);
-    
-                // //Añadimos la quinta celda TOTAL:
-                // nuevaCeldaTOT = document.createElement('td');
-                // nuevaCeldaTOT.setAttribute('class', 'total');
-                // contenidoTOT = document.createTextNode(miObj.total);
-                // nuevaCeldaTOT.appendChild(contenidoTOT);
-                // nuevaFila.appendChild(nuevaCeldaTOT);
-                // tbody.appendChild(nuevaFila);
-                // //tabla.appendChild(nuevaFila);
-    
-                // //Añadimos la cuarta celda BOTON:
-                // nuevaCeldaBOT = document.createElement('td');
-                // nuevaCeldaBOT.setAttribute('class', 'celda');
-                // nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
-                // nuevaFila.appendChild(nuevaCeldaBOT);
-                // tbody.appendChild(nuevaFila);
-                // //tabla.appendChild(nuevaFila);
-    
-                // //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
-                // nuevaCeldaBOT.addEventListener("click",borraFila);
-
-        }
-    }
 }
