@@ -3,8 +3,15 @@ window.onload = function(){
     btnGuardar = document.getElementById('guardar');
     btnGestion = document.getElementById('gestion'); 
 
-    btnGuardar.onclick = validarCampos;
+    btnGuardar.onclick = almacenarClientes;
+    btnGestion.addEventListener("click", gestionClientes);
+
+    i = 0;
     
+}
+
+function gestionClientes(){
+    location.href = "clientes.html";
 }
 
 function validarDNI(dni){
@@ -52,34 +59,31 @@ function validarEmail(email) {
     return regex.test(email) ? true : false;
 }
 
-function validarContrasenya(contrasenyaP, contrasenyaR){
-    var espacios = false;
-    var cont = 0;
-    //Comprobamos primero que no haya espacios en blanco:
-    while (!espacios && (cont < contrasenyaP.length)) {
-    if (contrasenyaP.charAt(cont) == " ")
-        espacios = true;
-        cont++;
+function validarContrasenya(contrasenya){
+    var mayuscula = false;
+    var minuscula = false;
+    var numero = false;
+    var caracter_raro = false;
+
+    if(contrasenya.length >= 8){		
+        for(var i = 0;i<contrasenya.length;i++){
+            if(contrasenya.charCodeAt(i) >= 65 && contrasenya.charCodeAt(i) <= 90){
+                mayuscula = true;
+            } else if(contrasenya.charCodeAt(i) >= 97 && contrasenya.charCodeAt(i) <= 122){
+                minuscula = true;
+            } else if(contrasenya.charCodeAt(i) >= 48 && contrasenya.charCodeAt(i) <= 57){
+                numero = true;
+            } else {
+                caracter_raro = true;
+            }
+        }
+
+        if(mayuscula == true && minuscula == true && caracter_raro == true && numero == true){
+            return true;
+        }
     }
-    if (espacios) {
-        // alert ("La contraseña no puede contener espacios en blanco");
     return false;
-    }
 
-    //Comprobamos que ambos campos estén completos:
-    if (contrasenyaP.length == 0 || contrasenyaR.length == 0) {
-        // alert("Los campos de la password no pueden quedar vacios");
-        return false;
-    }
-
-    //Comprobamos que ambas coincidan: 
-    if (contrasenyaP != contrasenyaR) {
-        // alert("Las passwords deben de coincidir");
-        return false;
-    } else {
-
-        return true; 
-    }
 }
 
 function validarCampos(){
@@ -158,23 +162,55 @@ function validarCampos(){
     }
 
     //Validamos la primera contraseña: 
-    if(validarContrasenya(contrasenyaP, contrasenyaR) == false){
+    if(validarContrasenya(contrasenyaP.value) == false){
         contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
         contrasenyaP.focus();
-        contrasenyaPError.innerHTML = "Introduzca una contraseña válida";
-        contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
-        contrasenyaR.focus();
-        contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
+        contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
 
 		resultado = false;
     } else {
         contrasenyaPError.innerHTML = "";
+    }
+
+    //Validamos segunda contraseña: 
+    if(contrasenyaR.value != contrasenyaP.value){
+        contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
+        contrasenyaR.focus();
+        contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
+    } else {
         contrasenyaRError.innerHTML = "";
     }
     
-
-    
     return resultado;
     
-    // dniError.innerHTML = "";
+}
+
+function almacenarClientes(){
+    //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
+    resultado = validarCampos();
+    
+    //Recogemos las variables necesarias:
+    let nombre = document.getElementById('nombre');
+    let apellidos = document.getElementById('apellidos');
+    let dni = document.getElementById('dni');
+    let fechaNac = document.getElementById('fechaNac');
+    let email = document.getElementById('email');
+    let contrasenyaP = document.getElementById('contrasenyaP');
+    //Si la validación va favorablemente guardamos el usuario en el localstorage:
+    if(resultado){
+        
+        //Creamos un array con los objetos que vamos a usar:
+        cliente = { nombre, apellidos, dni, fechaNac, email, contrasenyaP};
+            cliente.nombre = nombre.value;
+            cliente.apellidos = apellidos.value;
+            cliente.dni = dni.value;
+            cliente.fechaNac = fechaNac.value;
+            cliente.email = email.value; 
+            cliente.contrasenya = contrasenyaP.value;
+
+            localStorage.setItem('cliente['+i+']', JSON.stringify(cliente));
+    
+  
+    }
+  i++;
 }
