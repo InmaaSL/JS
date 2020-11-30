@@ -3,11 +3,20 @@ window.onload = function(){
     btnGuardar = document.getElementById('guardar');
     btnGestion = document.getElementById('gestion'); 
 
+    //Variable que usamos para poder ir agregando clientes al localStorage:
+    i = 0;
+
+    //variable para asignar un id a cada cliente:
+    id = 1;
+    if (localStorage.length != 0){
+            id = 1;
+    }
+
+    //Funciones en funcionamiento: 
     btnGuardar.onclick = almacenarClientes;
     btnGestion.addEventListener("click", gestionClientes);
+    btnGestion.addEventListener("click", recuperarAlmacenamiento);
 
-    i = 0;
-    
 }
 
 function gestionClientes(){
@@ -185,6 +194,12 @@ function validarCampos(){
     
 }
 
+function limpiarForm(){
+    //Obtenemos el formulario y lo ponemos en blanco: 
+	form = document.getElementById('clientesForm');
+	form.reset();
+}
+
 function almacenarClientes(){
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
     resultado = validarCampos();
@@ -200,7 +215,8 @@ function almacenarClientes(){
     if(resultado){
         
         //Creamos un array con los objetos que vamos a usar:
-        cliente = { nombre, apellidos, dni, fechaNac, email, contrasenyaP};
+        cliente = { id, nombre, apellidos, dni, fechaNac, email, contrasenyaP};
+            cliente.id = id;
             cliente.nombre = nombre.value;
             cliente.apellidos = apellidos.value;
             cliente.dni = dni.value;
@@ -209,8 +225,86 @@ function almacenarClientes(){
             cliente.contrasenya = contrasenyaP.value;
 
             localStorage.setItem('cliente['+i+']', JSON.stringify(cliente));
-    
-  
     }
-  i++;
+    i++;
+    id++;
+}
+
+function recuperarAlmacenamiento(){
+    //Obtenemos primero la cantidad de elementos guardados en el storage:
+    cantidadItems = localStorage.length;
+
+    //Obtenemos la tabla:
+    tabla = document.getElementsByTagName("table")[0];
+
+    if(cantidadItems > 0){
+            for (var i = 0; i < cantidadItems; i++) {	
+            //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
+            miObj = JSON.parse(localStorage.getItem('cliente['+i+']')); 
+    
+                // //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
+                // tbody = document.getElementsByTagName('tbody')[0];
+        
+                //Creamos la fila: 
+                nuevaFila = document.createElement('tr');
+                nuevaFila.setAttribute('class', 'nuevo_Articulo');
+    
+                //Añadimos la primera celda nombre:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'nombre');
+                contenido = document.createTextNode(miObj.nombre);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                //tabla.appendChild(nuevaFila);
+    
+                // //Añadimos la segunda celda REFERNCIA:
+                // nuevaCeldaREF = document.createElement('td');
+                // nuevaCeldaREF.setAttribute('class', 'ref');
+                // contenidoREF = document.createTextNode(miObj.ref);
+                // nuevaCeldaREF.appendChild(contenidoREF);
+                // nuevaFila.appendChild(nuevaCeldaREF);
+                // tbody.appendChild(nuevaFila);
+                // //tabla.appendChild(nuevaFila);
+                
+                // //Añadimos la tercera celda PRECIO:
+                // nuevaCeldaPRE = document.createElement('td');
+                // nuevaCeldaPRE.setAttribute('class', 'precio');
+                // contenidoPRE = document.createTextNode(miObj.precio);
+                // nuevaCeldaPRE.appendChild(contenidoPRE);
+                // nuevaFila.appendChild(nuevaCeldaPRE);
+                // tbody.appendChild(nuevaFila);
+                // //tabla.appendChild(nuevaFila);
+    
+                // //Añadimos la cuarta celda CANTIDAD:
+                // nuevaCeldaCAN = document.createElement('td');
+                // nuevaCeldaCAN.setAttribute('class', 'cantidad');
+                // contenidoCAN = document.createTextNode(miObj.cantidad);
+                // nuevaCeldaCAN.appendChild(contenidoCAN);
+                // nuevaFila.appendChild(nuevaCeldaCAN);
+                // tbody.appendChild(nuevaFila);
+                // //tabla.appendChild(nuevaFila);
+    
+                // //Añadimos la quinta celda TOTAL:
+                // nuevaCeldaTOT = document.createElement('td');
+                // nuevaCeldaTOT.setAttribute('class', 'total');
+                // contenidoTOT = document.createTextNode(miObj.total);
+                // nuevaCeldaTOT.appendChild(contenidoTOT);
+                // nuevaFila.appendChild(nuevaCeldaTOT);
+                // tbody.appendChild(nuevaFila);
+                // //tabla.appendChild(nuevaFila);
+    
+                // //Añadimos la cuarta celda BOTON:
+                // nuevaCeldaBOT = document.createElement('td');
+                // nuevaCeldaBOT.setAttribute('class', 'celda');
+                // nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
+                // nuevaFila.appendChild(nuevaCeldaBOT);
+                // tbody.appendChild(nuevaFila);
+                // //tabla.appendChild(nuevaFila);
+    
+                // //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
+                // nuevaCeldaBOT.addEventListener("click",borraFila);
+
+        }
+    }
 }
