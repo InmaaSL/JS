@@ -35,7 +35,6 @@ function validarDNI(dni){
 }
 
 function validarFechaNacimiento(fecha){
-
     var fechaSplit = fecha.split("/");
         var dia = fechaSplit[0];
         var mes = fechaSplit[1];
@@ -45,21 +44,12 @@ function validarFechaNacimiento(fecha){
             if((dia-0)>(date.getDate()-0)){
                 return false;
             }
-            return true;
         }
 }
 
 function validarEmail(email) {
-    if (email.indexOf('@') > -1 && email.indexOf('.') > -1 )
-    return true;
-    
-else 
-    return false;
-    // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(email)){
-    //     return true;
-    // } else {
-    //     return false; 
-    // }
+    var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email) ? true : false;
 }
 
 function validarContrasenya(contrasenyaP, contrasenyaR){
@@ -111,9 +101,9 @@ function validarCampos(){
     let contrasenyaPError = document.getElementById('errorContrasenyaP'); 
     let contrasenyaRError = document.getElementById('errorContrasenyaR');
 
-    //Ponemos colores para fallo:
-    // nombre.style.backgroundColor = "#FFF";
-	// dni.style.backgroundColor = "#FFF";
+    // Ponemos colores para fallo:
+    nombre.style.backgroundColor = "#FFF";
+	dni.style.backgroundColor = "#FFF";
     
     //Asignamos una variable para comprobar el estado de las validaciones: 
     let resultado = true;
