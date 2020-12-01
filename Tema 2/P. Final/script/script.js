@@ -3,7 +3,7 @@ i = 0;
 
 id = 1;
 if (localStorage.length != 0){
-        id = 1;
+    id = 1;
 }
 
 window.onload = function(){
@@ -21,7 +21,7 @@ window.onload = function(){
 }
 
 function gestionClientes(){
-    location.href = "clientes.html";
+    location.href = "gestionClientes.html";
 }
 
 function validarDNI(dni){
@@ -201,6 +201,8 @@ function limpiarForm(){
 	form.reset();
 }
 
+listaClientes = new Array();
+
 function almacenarClientes(){
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
     resultado = validarCampos();
@@ -214,10 +216,11 @@ function almacenarClientes(){
     let email = document.getElementById('email');
     let contrasenyaP = document.getElementById('contrasenyaP');
     //Si la validación va favorablemente guardamos el usuario en el localstorage:
+    
     if(resultado){
-        
-        //Creamos un array con los objetos que vamos a usar:
-        cliente = { id, nombre, apellidos, dni, fechaNac, email, contrasenyaP};
+        //Creamos un objeto de tipo cliente: 
+        cliente = new Object();
+
         cliente.id = id;
         cliente.nombre = nombre.value;
         cliente.apellidos = apellidos.value;
@@ -225,8 +228,16 @@ function almacenarClientes(){
         cliente.fechaNac = fechaNac.value;
         cliente.email = email.value; 
         cliente.contrasenya = contrasenyaP.value;
-        
-            localStorage.setItem('cliente['+i+']', JSON.stringify(cliente));
+
+        listaClientes.push(cliente);
+
+        miObjeto = new Object();
+        miObjeto.cliente = listaClientes;
+
+ 
+
+        json = JSON.stringify(miObjeto);
+
     }
     i++;
     id++;
