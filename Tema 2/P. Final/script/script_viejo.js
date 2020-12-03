@@ -162,24 +162,24 @@ function validarCampos(){
     }
     
     //Validamos la primera contraseña: 
-  //   if(validarContrasenya(contrasenyaP.value) == false){
-  //       contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
-  //       contrasenyaP.focus();
-  //       contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
+    if(validarContrasenya(contrasenyaP.value) == false){
+        contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
+        contrasenyaP.focus();
+        contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
         
-		// resultado = false;
-  //   } else {
-  //       contrasenyaPError.innerHTML = "";
-  //   }
+		resultado = false;
+    } else {
+        contrasenyaPError.innerHTML = "";
+    }
     
-  //   //Validamos segunda contraseña: 
-  //   if(contrasenyaR.value != contrasenyaP.value){
-  //       contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
-  //       contrasenyaR.focus();
-  //       contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
-  //   } else {
-  //       contrasenyaRError.innerHTML = "";
-  //   }
+    //Validamos segunda contraseña: 
+    if(contrasenyaR.value != contrasenyaP.value){
+        contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
+        contrasenyaR.focus();
+        contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
+    } else {
+        contrasenyaRError.innerHTML = "";
+    }
     
     return resultado;
     
@@ -249,15 +249,14 @@ function almacenarClientes(event){
             localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
         }
     }
-    //limpiarForm();
 }
 
 function recuperarAlmacenamiento(){
     //Obtenemos la tabla:
-    var tabla = document.getElementById('tablaClientes');
+    tabla = document.getElementById('tablaClientes');
 
     //tabla = document.getElementById('tablaClientes');
-    var fila = tabla.getElementsByTagName("tr");
+    fila = tabla.getElementsByTagName("tr");
 
     for (let i = fila.length-1; i > 0; i--) {
         tabla.removeChild(fila[i]);
@@ -270,21 +269,21 @@ function recuperarAlmacenamiento(){
     cantidadItems = localStorage.length;
 
     if(cantidadItems > 0){            
-        for (var i = 0; i < clientes.length; i++) {
-                            
+        // for (var i = 0; i < clientes.length; i++) {
+                        
             //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
             // //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
             // tbody = document.getElementsByTagName('tbody')[0];
     
             //Creamos la fila: 
             nuevaFila = document.createElement('tr');
-            nuevaFila.setAttribute('id', clientes[i].id)
+            nuevaFila.setAttribute('id', element.id)
             nuevaFila.setAttribute('class', 'nuevo_Cliente');
 
             //Añadimos la primera celda ID:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'id');
-            contenido = document.createTextNode(clientes[i].id);
+            contenido = document.createTextNode(element.id);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -292,7 +291,7 @@ function recuperarAlmacenamiento(){
             //Añadimos la segunda celda NOMBRE:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'nombre');
-            contenido = document.createTextNode(clientes[i].nombre);
+            contenido = document.createTextNode(element.nombre);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -300,7 +299,7 @@ function recuperarAlmacenamiento(){
             //Añadimos la tercera celda APELLIDOS:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'apellidos');
-            contenido = document.createTextNode(clientes[i].apellidos);
+            contenido = document.createTextNode(element.apellidos);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -308,7 +307,7 @@ function recuperarAlmacenamiento(){
             //Añadimos la cuarta celda DNI:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'dni');
-            contenido = document.createTextNode(clientes[i].dni);
+            contenido = document.createTextNode(element.dni);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -316,15 +315,15 @@ function recuperarAlmacenamiento(){
             //Añadimos la quinta celda FECHA NACIMIENTO:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'fechaNac');
-            contenido = document.createTextNode(clientes[i].fechaNac);
+            contenido = document.createTextNode(element.fechaNac);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
 
             //Añadimos la quinta celda EMAIL:
             nuevaCelda = document.createElement('td');
-            nuevaCelda.setAttribute('class', 'email');
-            contenido = document.createTextNode(clientes[i].email);
+            nuevaCelda.setAttribute('class', 'fechaNac');
+            contenido = document.createTextNode(element.email);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -332,7 +331,7 @@ function recuperarAlmacenamiento(){
             //Añadimos la quinta celda EMAIL:
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'contrasenya');
-            contenido = document.createTextNode(clientes[i].contrasenya);
+            contenido = document.createTextNode(element.contrasenya);
             nuevaCelda.appendChild(contenido);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
@@ -341,23 +340,33 @@ function recuperarAlmacenamiento(){
             nuevaCelda = document.createElement('td');
             nuevaCelda.setAttribute('class', 'celda');
             nuevaCelda.innerHTML = '<button id="borrarCliente">Borrar</button> <button id="Editar">Editar</button>';
-            nuevaCelda.addEventListener("click",borrarCliente);
             nuevaFila.appendChild(nuevaCelda);
             tabla.appendChild(nuevaFila);
 
-        }
+            //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
+            btnBorrarCliente = document.getElementById('borrarCliente');
+            //btnBorrarCliente.addEventListener("clik", borrarCliente);
+            btnBorrarCliente.addEventListener("click", function (){
+                this.parentNode.parentNode.remove();
+                actualizarClientes();
+               //clientes = JSON.parse(localStorage.getItem("Clientes"));
+                    // for (let x = 0; x < clientes.length; x++) {
+                    //     if(clientes[x].id == element.id){
+                    //         clientes.splice(x, 1);
+                    //         localStorage.setItem("Clientes", JSON.stringify(clientes));
+                    //         location.href = "formularioClientes.html";
+                    //         return;
+                    //     }
+                        
+                    // }
+            })
+        });
     }
-    
-}
-
-function borrarCliente(){
-    this.parentNode.remove();
-    actualizarClientes();
 }
 
 function actualizarClientes(){
     //Primero borramos lo que haya y así guardamos actualizando los datos: 
-    //localStorage.clear();
+    localStorage.clear();
 
     miObj = JSON.parse(localStorage.getItem("Clientes"));
 
@@ -369,39 +378,26 @@ function actualizarClientes(){
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
     clientes = fila.length;
-    arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
-
-    clientesInicio = arrayClientes.length;
-    // for (let i = clientesInicio -1; i > 0; i--) {
-    //     localStorage.removeItem(arrayClientes[i]);
-    //     }
-        // for (let x = 0; x < clientesInicio; x++) {
-            localStorage.removeItem(arrayClientes[2]);
-        // }
-    
 
     //Calculamos:
     //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
     //Obtenemos el valor de la celda que tiene como clase total.  
     //parseFloat ->  convertir una cadena en un número.
     if (clientes > 0) {
-            for (var i = 0; i < clientes; i++) {
-                nuevoCliente = { id : fila[i].getElementsByClassName('id')[0].innerText,
-                            nombre : fila[i].getElementsByClassName('nombre')[0].innerText, 
-                            apellidos : fila[i].getElementsByClassName('apellidos')[0].innerText, 
-                            dni : fila[i].getElementsByClassName('dni')[0].innerText, 
-                            fechaNac : fila[i].getElementsByClassName('fechaNac')[0].innerText, 
-                            email: fila[i].getElementsByClassName('email')[0].innerText, 
-                            contrasenya: fila[i].getElementsByClassName('contrasenya')[0].innerText
-                };
-                //Añadimos el nuevo cliente al array: 
-                arrayClientes.push(nuevoCliente);
-                localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
-        }	   
+            for (var i = 0; i < clientes; i++) {	
+                miObj.id = fila[i].getElementsByClassName('id')[0].innerText;
+                miObj.nombre = fila[i].getElementsByClassName('nombre')[0].innerText;
+                miObj.apellidos = fila[i].getElementsByClassName('apellidos')[0].innerText;
+                miObj.dni = fila[i].getElementsByClassName('dni')[0].innerText;
+                miObj.fechaNac = fila[i].getElementsByClassName('fechaNac')[0].innerText;
+                miObj.email = fila[i].getElementsByClassName('email')[0].innerText;
+                miObj.contrasenya = fila[i].getElementsByClassName('contrasenya')[0].innerText;
 
-
+                localStorage.setItem("Clientes", JSON.stringify(clientes));
+            alert('Datos almacenados correctamente')
+        }	
+    } else {
+        alert('No hay productos que almacenar');
     }
-
-
-
+    
 }
