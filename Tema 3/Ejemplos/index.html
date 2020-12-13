@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>ajax2-ejemplo03</title>
+<script>
+window.addEventListener("click",inicia,false)
+function inicia(){
+ ajax=new XMLHttpRequest();
+ datos=new FormData();
+ datos.append("nombre","jaime");
+ datos.append("oficio","humorista");
+ ajax.addEventListener("load",mostrar,false);
+ ajax.open("POST","documento2.php",true);
+ ajax.send(datos);
+ //ajax.open("GET","documento2.php?nombre=jaime&oficio=humorista",true);
+ //ajax.send();
+}
+function mostrar(e){
+ var v_resultado=document.getElementById("resultado");
+ v_resultado.innerHTML=e.target.responseText;
+}
+</script>
+</head>
+<body>
+<section id="peticion">
+<button id="boton">Pulsar</button>
+</section>
+<section id="resultado">
+</section>
+</body>
+</html>

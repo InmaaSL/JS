@@ -208,7 +208,7 @@ function almacenarClientes(event){
         if(localStorage.getItem("Clientes") == null){
             //Creamos un objeto de tipo cliente: 
             var id = 1;
-            cliente = [{ "id" : id, 
+            cliente = [{"id" : id, 
                         "nombre" : nombreC, 
                         "apellidos" : apellidosC, 
                         "dni" : dniC, 
@@ -271,7 +271,6 @@ function recuperarAlmacenamiento(){
 
     if(cantidadItems > 0){            
         for (var i = 0; i < clientes.length; i++) {
-                            
             //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
             // //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
             // tbody = document.getElementsByTagName('tbody')[0];
@@ -352,14 +351,24 @@ function recuperarAlmacenamiento(){
 
 function borrarCliente(){
     this.parentNode.remove();
+    miObj = JSON.parse(localStorage.getItem("Clientes"));
+
+    //console.log(miObj[2].id);
+
+    // for (let i = 0; i < miObj.length; i++) {
+    //     if(miObj[i].id == i){
+    //         miObj.splice(i, 1);
+    //         break;
+    //     }
+    // }
+
     actualizarClientes();
+
 }
 
 function actualizarClientes(){
     //Primero borramos lo que haya y así guardamos actualizando los datos: 
-    //localStorage.clear();
-
-    miObj = JSON.parse(localStorage.getItem("Clientes"));
+    // localStorage.clear();
 
     //Obtenemos la tabla:
     tabla = document.getElementById('tablaClientes');
@@ -367,24 +376,21 @@ function actualizarClientes(){
     //tabla = document.getElementById('tablaClientes');
     fila = tabla.getElementsByClassName("nuevo_Cliente");
     
-    //Nos quedamos solo con los artículos y no con la "fila enunciado":
     clientes = fila.length;
-    arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
-
-    clientesInicio = arrayClientes.length;
-    // for (let i = clientesInicio -1; i > 0; i--) {
-    //     localStorage.removeItem(arrayClientes[i]);
-    //     }
-        // for (let x = 0; x < clientesInicio; x++) {
-            localStorage.removeItem(arrayClientes[2]);
-        // }
     
-
+    //arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
+    localStorage.clear();
+    
+    //clientesInicio = arrayClientes.length;
+    
+    
     //Calculamos:
     //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
     //Obtenemos el valor de la celda que tiene como clase total.  
     //parseFloat ->  convertir una cadena en un número.
-    if (clientes > 0) {
+    if(localStorage.getItem("Clientes") == null){
+        //alert('entramos');
+        var arrayClientes;
             for (var i = 0; i < clientes; i++) {
                 nuevoCliente = { id : fila[i].getElementsByClassName('id')[0].innerText,
                             nombre : fila[i].getElementsByClassName('nombre')[0].innerText, 
@@ -394,14 +400,12 @@ function actualizarClientes(){
                             email: fila[i].getElementsByClassName('email')[0].innerText, 
                             contrasenya: fila[i].getElementsByClassName('contrasenya')[0].innerText
                 };
+
+                localStorage.setItem("Clientes", JSON.stringify(nuevoCliente));
+
                 //Añadimos el nuevo cliente al array: 
-                arrayClientes.push(nuevoCliente);
-                localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
+                // arrayClientes.push(nuevoCliente);
+                // localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
         }	   
-
-
     }
-
-
-
 }

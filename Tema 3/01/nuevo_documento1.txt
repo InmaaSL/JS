@@ -1,0 +1,14 @@
+¡Hola!
+Poco a poco vamos entendiendo esto... 
+
+Ejercicio 01
+A partir de la página web proporcionada, añadir el código JavaScript necesario para que:
+* En el campo URL le añadamos un nombre de archivo y lo cargue.
+* Cuando se pulse el botón "Mostrar Contenidos", descargar mediante peticiones AJAX
+el contenido del fichero introducido en el campo URL y luego mostrar su contenido en
+la zona de "Contenidos del archivo".
+* En "Estados de la petición" se mostrará en todo momento el estado que se encuentran
+las peticiones AJAX (No inicializada, cargando, completada, etc.)
+* En "Código de estado" mostrar el código y texto de estado de la respuesta del servidor.
+
+Hola!!! 

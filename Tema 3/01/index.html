@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="estilo.css" />
+    <script src="script.js"></script>
+    <title>Ejercicio 01</title>
+</head>
+<body>
+    <h1>Ejercicio 1: AJAX</h1>
+
+    <section id="seleccion_fichero">
+        <label for="archivo"> URL: </label>
+        <input type="search" name="archivo" id="archivo" style="width: 450px">
+        <button id="mostrar_contenido">Mostrar contenidos</button>
+
+        <label for="contenido"><h3>Contenidos del archivo:</h3></label>
+        <textarea name="mostrar_archivo" id="mostrar_archivo" cols="90" rows="20" disabled style="overflow-y: scroll; overflow-x: scroll;"></textarea>
+    </section>
+
+    <section id="estado_codigo">
+        <label for="estado_peticion"><h3>Estado de la petición</h3></label>
+        <textarea name="estado_peticion" id="estado_peticion" cols="40" rows="7" disabled ></textarea>
+
+        <label for="codigo_estado"><h3>Código de estado</h3></label>
+        <textarea name="codigo_estado" id="codigo_estado" cols="40" rows="7" disabled ></textarea>
+    </section>
+</body>
+</html>
