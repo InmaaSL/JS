@@ -39,5 +39,6 @@ function cambioEstado(){
         codigoEstado.innerHTML = "404 - No encontrado";
     }
 
+
 }
 
