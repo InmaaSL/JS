@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ejercicio 1 AJAX</title>
+</head>
+<style>
+	#container_url{
+		box-sizing: border-box;
+		display: flex;
+		flex-flow: row wrap;
+		width: 100%;
+		padding: 20px;
+	}
+		input[type="text"]{
+			width: 400px;
+			margin: 0 15px;
+		}
+		input[type="button"]{
+
+		}
+	#container_datos{
+		box-sizing: border-box;
+		display: flex;
+		flex-flow: row wrap;
+		height: 600px;
+		width: 100%;
+	}
+		#izquierda,
+		#derecha{
+			box-sizing: border-box;;
+			display: flex;
+			flex-flow: column wrap;
+			padding: 20px;
+		}
+		
+		#izquierda{
+			width: 60%;
+		}
+			#contenido{
+				height: 500px;
+			}
+		#derecha{
+			width: 40%;			
+		}
+			textarea{
+				resize: none;				
+			}
+			#estado{
+				height: 300px;				
+			}
+			#codigo{
+				height: 150px;				
+			}		
+</style>
+<script>
+
+	
+	window.onload = function(){
+		var btn_mostrar = document.querySelector("#boton");
+		btn_mostrar.addEventListener("click", lanzarPeticion);		
+	}
+
+	function lanzarPeticion(){
+		var txt_url = document.querySelector("#url");
+		
+		ajax = new XMLHttpRequest();
+		ajax.addEventListener("load", mostrar, false);
+		ajax.addEventListener("readystatechange", fase, false);
+		ajax.addEventListener("loadend", final, false);
+		ajax.open("GET", txt_url.value, true);
+		ajax.send();			
+	}
+
+	function mostrar(e) {
+		var txt_contenido = document.querySelector("#contenido");
+	 	txt_contenido.innerText = e.target.responseText; 
+	} 
+
+	function final(){
+		var txt_codigo = document.querySelector("#codigo");
+		txt_codigo.innerText = "Proceso finalizado con éxito";		
+	}
+
+	function fase(e){
+		//alert(ajax.readyState);
+		//alert(e.target.readyState);
+		
+		var txt_estado = document.querySelector("#estado");
+		txt_estado.innerText = e.target.readyState;
+	}
+</script>
+<body>
+	<div id="container_url">
+		<label for="url">URL:</label>
+		<input type="text" id="url">
+		<input type="button" id="boton" value="Mostrar contenido">
+	</div>
+	<div id="container_datos">
+		<div id="izquierda">
+			<label for="contenido"><strong>Contenidos del archivo: </strong></label>
+			<textarea id="contenido"></textarea>			
+		</div>
+		<div id="derecha">
+			<label for="estado"><strong>Estado de la petición: </strong></label>
+			<textarea id="estado"></textarea>
+
+			<label for="codigo"><strong>Código de estado: </strong></label>
+			<textarea id="codigo"></textarea>
+		</div>
+	</div>	
+</body>
+</html>

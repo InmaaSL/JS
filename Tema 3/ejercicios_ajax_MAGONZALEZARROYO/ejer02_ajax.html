@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script>
+
+		window.onload = function(){
+			var txt_texto = document.querySelector("#busqueda");
+			txt_texto.addEventListener("keyup", lanzarPeticion); 
+		}
+
+		function lanzarPeticion(){	
+			ajax = new XMLHttpRequest();
+			ajax.addEventListener("load", mostrar, false);
+			//ajax.addEventListener("readystatechange", fase, false);
+			//ajax.addEventListener("loadend", final, false);
+			ajax.open("GET", "ciudades.txt", true);
+			ajax.send();			
+		}
+
+		function mostrar(e) {
+			var lista_ciudades = e.target.responseText;
+			
+			//Crear vector con ciudades disponibles
+			lista_ciudades = lista_ciudades.split(","); 
+
+			//Obtener texto a buscar
+			var busqueda = document.querySelector("#busqueda").value; 
+			
+			//Patrón a buscar
+			var patron = new RegExp("^" + busqueda, "gi");	
+			var auxiliar = [];
+
+			//var patron = "\\^" + busqueda + "\\\gi";
+						
+			//Buscar coincidencias con cada ciudad
+			for (var i = 0; i < lista_ciudades.length; i++) {
+				if(patron.test(lista_ciudades[i])){
+					//Añadir a vector auxiliar
+					auxiliar.push(lista_ciudades[i]);
+					//alert(lista_ciudades[i]);
+				} 
+			}	
+
+			//Mostrar coincidencias
+			var sugerencias = document.querySelector("#resultado");
+			sugerencias.innerText = "Sugerencias: " + auxiliar;
+		} 		
+		
+	</script>
+	<title>Ejercicio 2 AJAX</title>
+</head>
+<body>
+	<form action="">
+		<label for="texto">Escribe el nombre de alguna ciudad</label>
+		<input type="text" id="busqueda">
+		<sub id="resultado"></sub>
+	</form>
+	
+</body>
+</html>

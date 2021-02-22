@@ -11,8 +11,11 @@
     <div> 
         <h2> Registro: </h2>
         <form action="" id="clientesForm">
-
             <table>
+                <tr>
+                    <td><label for="nombre"> ID:</label></td>
+                    <td><input type="text" name="id" id="id" disabled></td>
+                </tr>
                 <tr>
                     <td><label for="nombre"> Nombre:</label></td>
                     <td><input type="text" name="nombre" id="nombre"></td>
@@ -48,19 +51,25 @@
                     <td><input type="password" name="contrasenyaR" id="contrasenyaR"></td>
                     <td id="errorContrasenyaR"></td>
                 </tr>
+                <tr >
+                    <!-- style="visibility: hidden" -->
+                    <td><label for="borrado">Borrado: </label></td>
+                    <td><input type="text" name="borrado" id="borrado"></td>
+                    <td id="errorContrasenyaR"></td>
+                </tr>
             </table>
-
-            <div id="buttons">
-                <table>
-                    <tr>
-                        <td><input type="button" id="cancelar" value="Cancelar"></td>
-                        <td><input type="button" id="guardar" value="Guardar"></td>
-                        <td><input type="button" id="gestion" value="Gestion de clientes"></td>
-                    </tr>
-                </table>
-            
-            </div>
         </form>
+
+        <div id="buttons">
+            <table>
+                <tr>
+                    <td><input type="button" id="cancelar" value="Cancelar"></td>
+                    <td><input type="button" id="guardar" value="Guardar"></td>
+                    <td><input type="button" id="gestion" value="Gestion de clientes"></td>
+                </tr>
+            </table>
+        </div>
+        
 
         <h2>Gestión de clientes:</h2>
         <table id="tablaClientes">
@@ -75,7 +84,8 @@
                 <th class="ancho4">Fecha de nacimiento</th>
                 <th class="ancho5">Email</th>
                 <th class="ancho6">Contraseña</th>
-                <th class="ancho7"></th>
+                <th class="ancho8">Borrado</th>
+                <!-- style="visibility: hidden" -->
             </tbody> 
         </table>
 

@@ -2,20 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="estilo.css" />
-    <script src="script.js"></script>
-    <title>Ejercicio 01</title>
+    <title>Localidades</title>
+    <script>
+        //Explicación del código:
+        
+        //verifique si el campo de entrada está vacío (str.length == 0). Si es así, borre el contenido del marcador de posición txtHint y salga de la función.
+        function buscaSugerencia(sugerencia) {
+            if (sugerencia.length == 0) {
+                document.getElementById("sugerencias").innerHTML = "";
+                return;
+            } else {
+                //AJAX
+                //Creamos un objeto XMLHttpRequest
+                var xmlhttp = new XMLHttpRequest();
+                //Funcion que cambia el estado
+                xmlhttp.onreadystatechange = function() {
+                        //pintamos la sugerencia
+                        document.getElementById("sugerencias").innerHTML = this.responseText;
+                };
+                //Envia la solicitud a un archivo PHP (busca.php) en el servidor, el parámetro q se agrega a la url (busca.php? Q = "+ cadenaTexto)
+                xmlhttp.open("GET", "localidades.php?ciudad=" + sugerencia);
+                xmlhttp.send();
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Ejercicio 2: AJAX</h1>
 
     <h2>Escribe el nombre de alguna ciudad: </h2>
 
-    <form action="" method="GET">
-        <label for="nombre_ciudad">Ciudad: </label> 
-        <input type="text" name="nombre_ciudad" id="nombre_ciudad" onkeyup="mostrarSugerencia(this.value)">
+    <form>
+        <label for="nombre_ciudad">Ciudad:</label> 
+        <input type="text" onkeyup="buscaSugerencia(this.value)">
     </form>
+
     <p>
         <label for="sugerencias">Sugerencias:</label>  
         <span id="sugerencias"> Localidades de Alicante. </span> 
