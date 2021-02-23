@@ -109,9 +109,10 @@ function validarCampos(){
     let contrasenyaPError = document.getElementById('errorContrasenyaP'); 
     let contrasenyaRError = document.getElementById('errorContrasenyaR');
     
-    // Ponemos colores para fallo:
+    // Ponemos colores para correcto:
     nombre.style.backgroundColor = "#FFF";
 	dni.style.backgroundColor = "#FFF";
+    //fechaNac.style.backgroundColor = "#FFF";
     
     //Asignamos una variable para comprobar el estado de las validaciones: 
     let resultado = true;
@@ -123,7 +124,9 @@ function validarCampos(){
         nombreError.innerHTML = "El nombre no puede estar vacío";
 		resultado = false;
     } else {
+        nombre.innerHTML = nombre.value;
         nombreError.innerHTML = "";
+        nombre.style.backgroundColor = "#FFF";
     }
     
     if (apellidos.value == null || apellidos.value.length == 0 || /^\s+$/.test(apellidos.value)) {
@@ -132,7 +135,9 @@ function validarCampos(){
         apellidosError.innerHTML = "Los apellidos no pueden estar vacíos";
 		resultado = false;
     } else {
+        apellidos.innerHTML = apellidos.value;
         apellidosError.innerHTML = "";
+        apellidos.style.backgroundColor = "#FFF";
     }
     
     //Comprobamos el DNI usando la función correspondiente: 
@@ -142,7 +147,9 @@ function validarCampos(){
         dniError.innerHTML = "Hay un error en su DNI";
 		resultado = false;		
     } else {
+        dni.innerHTML = dni.value;
         dniError.innerHTML = "";
+        dni.style.backgroundColor = "#FFF";
     }
     
     //Validamos fecha de nacimiento usando la función correspondiente: 
@@ -152,7 +159,9 @@ function validarCampos(){
         fechaNacError.innerHTML = "Debe usted introducir una fecha";
 		resultado = false;	
     } else {
+        fechaNac.innerHTML = fechaNac.value;
         fechaNacError.innerHTML = "";
+        fechaNac.style.backgroundColor = "#FFF";
     }
     
     //Validamos el correo electrónico:
@@ -162,28 +171,32 @@ function validarCampos(){
         emailError.innerHTML = "Introduzca su email";
 		resultado = false;
     } else {
+        email.innerHTML = email.value;
         emailError.innerHTML = "";
+        email.style.backgroundColor = "#FFF";
     }
     
     //Validamos la primera contraseña: 
-  //   if(validarContrasenya(contrasenyaP.value) == false){
-  //       contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
-  //       contrasenyaP.focus();
-  //       contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
-        
-		// resultado = false;
-  //   } else {
-  //       contrasenyaPError.innerHTML = "";
-  //   }
+    if(validarContrasenya(contrasenyaP.value) == false || contrasenyaP.value == 0){
+        contrasenyaP.style.backgroundColor = "rgba(255,155,155,0.4)";
+        contrasenyaP.focus();
+        contrasenyaPError.innerHTML = "Introduzca una contraseña válida. Recuerde que ha de tener al menos 8 caracteres, mayúsculas, minúsculas, números y algun signo de puntuación";
+		resultado = false;
+    } else {
+        contrasenyaPError.innerHTML = "";
+        contrasenyaP.style.backgroundColor = "#FFF";
+    }
     
-  //   //Validamos segunda contraseña: 
-  //   if(contrasenyaR.value != contrasenyaP.value){
-  //       contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
-  //       contrasenyaR.focus();
-  //       contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
-  //   } else {
-  //       contrasenyaRError.innerHTML = "";
-  //   }
+    //Validamos segunda contraseña: 
+    if(contrasenyaR.value != contrasenyaP.value || contrasenyaR.value == 0){
+        contrasenyaR.style.backgroundColor = "rgba(255,155,155,0.4)";
+        contrasenyaR.focus();
+        contrasenyaRError.innerHTML = "Las contraseñas no coinciden";
+        resultado = false;
+    } else {
+        contrasenyaRError.innerHTML = "";
+        contrasenyaR.style.backgroundColor = "#FFF";
+    }
     
     return resultado;
     
@@ -258,8 +271,8 @@ function almacenarClientes(event){
             }
             localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
         }
+        limpiarForm();
     }
-    limpiarForm();
 }
 
 function recuperarAlmacenamiento(){
@@ -279,11 +292,82 @@ function recuperarAlmacenamiento(){
         alert("No hay clientes registrados");
     } else {         
         for (var i = 0; i < clientes.length; i++) {
+            clientesBorrados = clientes[i].borrado;
+            if(clientesBorrados == "true"){
+                //alert("la casilla es verdadera");
+                nuevaFila = document.createElement('tr');
+                nuevaFila.setAttribute('id', clientes[i].id)
+                nuevaFila.setAttribute('class', 'nuevo_Cliente');
+                nuevaFila.setAttribute('hidden', 'false');
 
-                //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
-                // //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
-                // tbody = document.getElementsByTagName('tbody')[0];
-        
+                //Añadimos la primera celda ID:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'idN');
+                contenido = document.createTextNode(clientes[i].id);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la segunda celda NOMBRE:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'nombre');
+                contenido = document.createTextNode(clientes[i].nombre);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la tercera celda APELLIDOS:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'apellidos');
+                contenido = document.createTextNode(clientes[i].apellidos);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la cuarta celda DNI:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'dni');
+                contenido = document.createTextNode(clientes[i].dni);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda FECHA NACIMIENTO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'fechaNac');
+                contenido = document.createTextNode(clientes[i].fechaNac);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda EMAIL:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'email');
+                contenido = document.createTextNode(clientes[i].email);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda CONTRASEÑA:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'contrasenya');
+                contenido = document.createTextNode(clientes[i].contrasenya);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda BORRADO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'campoBorrado');
+                //nuevaCelda.setAttribute('hidden', 'true');
+                contenido = document.createTextNode(clientes[i].borrado);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+
+                tabla.appendChild(nuevaFila);
+
+            }else {
+                //alert("la casilla es falsa");
                 //Creamos la fila: 
                 nuevaFila = document.createElement('tr');
                 nuevaFila.setAttribute('id', clientes[i].id)
@@ -348,7 +432,7 @@ function recuperarAlmacenamiento(){
                 //Añadimos la quinta celda BORRADO:
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('class', 'campoBorrado');
-                // nuevaCelda.setAttribute('hidden', 'false');
+                nuevaCelda.setAttribute('hidden', 'false');
                 contenido = document.createTextNode(clientes[i].borrado);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
@@ -373,7 +457,6 @@ function recuperarAlmacenamiento(){
                 nuevaCelda.innerHTML = '<button id="baja">Dar de baja</button>';
                 nuevaCelda.addEventListener("click", function(){
                                                         
-                                                        //Si pongo ("idN")[i] peta pero si pongo ("idN")[1] funciona
                                                         id = this.parentNode.getAttribute("id");
 
                                                         // Selecionamos la tabla de clientes
@@ -387,8 +470,6 @@ function recuperarAlmacenamiento(){
 
                                                         casillas[7].innerText = true;
 
-                                                        //clientes[id].borrado = true; 
-                                                        //alert(id);
                                                         // this se refiere al botón que llama a la acción. Al poner parent node
                                                         // subimos al tr que lo contiene y lo borramos con remove.
                                                         //this.parentNode.remove();
@@ -398,9 +479,7 @@ function recuperarAlmacenamiento(){
                                                     });
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
-            
-
-        
+            }
         }    
     }
 }
@@ -414,7 +493,6 @@ function borrarCliente(){
 
     // Seleccionamos todas las filas y las guardamos en la variable filas
     filas = tabla.getElementsByTagName('tr');
-
 
     // Recorremos las filas
     for (var i = 1; i < filas.length; i++) {
@@ -467,47 +545,3 @@ function editarCliente(id){
     
 
 }
-
-// function actualizarClientes(){
-//     //Primero borramos lo que haya y así guardamos actualizando los datos: 
-//     // localStorage.clear();
-
-//     //Obtenemos la tabla:
-//     tabla = document.getElementById('tablaClientes');
-
-//     //tabla = document.getElementById('tablaClientes');
-//     fila = tabla.getElementsByClassName("nuevo_Cliente");
-    
-//     clientes = fila.length;
-    
-//     //arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
-//     localStorage.clear();
-    
-//     //clientesInicio = arrayClientes.length;
-    
-    
-//     //Calculamos:
-//     //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
-//     //Obtenemos el valor de la celda que tiene como clase total.  
-//     //parseFloat ->  convertir una cadena en un número.
-//     if(localStorage.getItem("Clientes") == null){
-//         //alert('entramos');
-//         var arrayClientes;
-//             for (var i = 0; i < clientes; i++) {
-//                 nuevoCliente = { id : fila[i].getElementsByClassName('id')[0].innerText,
-//                             nombre : fila[i].getElementsByClassName('nombre')[0].innerText, 
-//                             apellidos : fila[i].getElementsByClassName('apellidos')[0].innerText, 
-//                             dni : fila[i].getElementsByClassName('dni')[0].innerText, 
-//                             fechaNac : fila[i].getElementsByClassName('fechaNac')[0].innerText, 
-//                             email: fila[i].getElementsByClassName('email')[0].innerText, 
-//                             contrasenya: fila[i].getElementsByClassName('contrasenya')[0].innerText
-//                 };
-
-//                 localStorage.setItem("Clientes", JSON.stringify(nuevoCliente));
-
-//                 //Añadimos el nuevo cliente al array: 
-//                 // arrayClientes.push(nuevoCliente);
-//                 // localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
-//         }	   
-//     }
-//}

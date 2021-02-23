@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link href="estilos.css" rel="stylesheet" type="text/css"> -->
     <script src="script/script.js"></script>
-    <title>Nuevo cliente: </title>
+    <title>Nuevo producto: </title>
 </head>
 <body>
     <div> 
         <h2> Registro: </h2>
-        <form action="" id="clientesForm">
+        <form action="" id="ProductoForm">
             <table>
                 <tr>
-                    <td><label for="id"> ID:</label></td>
-                    <td><input type="text" name="id" id="id" disabled></td>
+                    <td><label for="referencia"> ID:</label></td>
+                    <td><input type="text" name="referencia" id="referencia" disabled></td>
                 </tr>
                 <tr>
-                    <td><label for="nombre"> Nombre:</label></td>
+                    <td><label for="descripcion"> Nombre:</label></td>
                     <td><input type="text" name="nombre" id="nombre"></td>
                     <td id="errorNombre"></td>
                 </tr>
@@ -51,8 +51,9 @@
                     <td><input type="password" name="contrasenyaR" id="contrasenyaR"></td>
                     <td id="errorContrasenyaR"></td>
                 </tr>
-                <tr style="visibility: hidden">
-                    <td><label for="borrado" >Borrado: </label></td>
+                <tr >
+                    <!-- style="visibility: hidden" -->
+                    <td><label for="borrado">Borrado: </label></td>
                     <td><input type="text" name="borrado" id="borrado"></td>
                     <td id="errorContrasenyaR"></td>
                 </tr>
@@ -83,7 +84,7 @@
                 <th class="ancho4">Fecha de nacimiento</th>
                 <th class="ancho5">Email</th>
                 <th class="ancho6">Contraseña</th>
-                <th class="ancho8" style="visibility: hidden" >Borrado</th>
+                <th class="ancho8">Borrado</th>
                 <!-- style="visibility: hidden" -->
             </tbody> 
         </table>
