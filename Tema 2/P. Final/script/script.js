@@ -294,7 +294,6 @@ function recuperarAlmacenamiento(){
         for (var i = 0; i < clientes.length; i++) {
             clientesBorrados = clientes[i].borrado;
             if(clientesBorrados == "true"){
-                //alert("la casilla es verdadera");
                 nuevaFila = document.createElement('tr');
                 nuevaFila.setAttribute('id', clientes[i].id)
                 nuevaFila.setAttribute('class', 'nuevo_Cliente');
@@ -365,9 +364,7 @@ function recuperarAlmacenamiento(){
                 nuevaFila.appendChild(nuevaCelda);
 
                 tabla.appendChild(nuevaFila);
-
             }else {
-                //alert("la casilla es falsa");
                 //Creamos la fila: 
                 nuevaFila = document.createElement('tr');
                 nuevaFila.setAttribute('id', clientes[i].id)
@@ -468,11 +465,9 @@ function recuperarAlmacenamiento(){
                                                         // Seleccionamos todas las celdas de la fila en cada iteración
                                                         casillas = filas[id].getElementsByTagName("td");
 
+                                                        // Ponemos en true la casilla de borrado: 
                                                         casillas[7].innerText = true;
 
-                                                        // this se refiere al botón que llama a la acción. Al poner parent node
-                                                        // subimos al tr que lo contiene y lo borramos con remove.
-                                                        //this.parentNode.remove();
                                                         // Aquí ejecutamos la función borrarCliente que en realidad lo que hace
                                                         // es recorrer otra vez la tabla y sobreescribir Clientes en Localstorage
                                                         borrarCliente();
