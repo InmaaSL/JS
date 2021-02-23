@@ -518,20 +518,10 @@ function borrarCliente(){
 
 function editarCliente(id){
     //Lo primero vamos a coger el form y sus items: 
-    //alert(id);
         document.getElementById("nombre").value = arrayTotal[id-1].nombre;
         document.getElementById("apellidos").value = arrayTotal[id-1].apellidos;
         document.getElementById("dni").value = arrayTotal[id-1].dni;
         document.getElementById("fechaNac").value = arrayTotal[id-1].fechaNac;
         document.getElementById("email").value = arrayTotal[id-1].email;
-
-
-        // document.getElementById("apellidos").value = apellidos;
-        // document.getElementById("dni").value = dni;
-        // document.getElementById("fechaNac").value = fechaNac;
-        // document.getElementById("email").value = email;
-        // document.getElementById("contrasenyaP").value = contrasenyaP;
-        // document.getElementById("contrasenyaR").value = contrasenyaR;
-    
 
 }
