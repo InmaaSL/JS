@@ -18,14 +18,11 @@ function comprobarUsuario(event){
     password = document.getElementById("password");
     error = document.getElementById("error");
     
-
-
-
-
     for (let i = 0; i < arrayClientes.length; i++) {
-        if(arrayClientes[i].nombre == usuario.value && arrayClientes[i].contrasenya == password.value){
+        if(arrayClientes[i].email == usuario.value && arrayClientes[i].contrasenya == password.value){
             //Redirecciona a la tabla actualizada: 
             window.location.href = "ventas.html";
+            document.cookie = usuario.value + "=" + password.value + "; + max-age=3600";
         } else{
             error.innerHTML = "El usuario y la contraseña no coinciden";
         }
