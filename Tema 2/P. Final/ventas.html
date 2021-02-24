@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script/script_ventas.js"></script>
+    <title>Ventas</title>
+</head>
+<body>
+    <nav></nav>
+    <main>
+        <div id="productos">
+            
+        </div>
+        <div id="factura">
+            <form id="miform" action="#" >
+                <div id='campos_derecha'>
+                    <label for="dni">DNI: </label><input type="text" id="dni" value="" placeholder="123456789X"><br>
+                    <label for="ref">Ref: </label><input type="text" id="ref" value="" placeholder="ref" disabled="true"><br>
+                    <label for="precio">Precio: </label><input type="text" id="precio" value="" placeholder="000.00" disabled="true"><br>
+                    <label for="cantidad">Cantidad: </label><input type="text" id="cantidad" value="" placeholder="en KG">
+                </div>
+                    <button id="grabar" class="mar_t_10">Grabar</button> 
+                    <button id="cancelar" class="mar_t_10">Cancelar</button>
+            </form>
+
+            <table id="lineas">
+                <colgroup>
+                    <col><col><col><col><col><col>
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th class="ancho1" >DNI</th>
+                        <th class="ancho2">Ref.</th>
+                        <th class="ancho3">Precio</th>
+                        <th class="ancho3">Cantidad</th>
+                        <th class="ancho3">Total</th>
+                        <th class="ancho3">  </th>
+                    </tr>
+                </tbody>
+                
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Total</td><td class="total a_derecha">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+            
+            <button id="recuperar" class="mar_t_10">Recuperar tabla</button> 
+            <button id="almacenar" class="mar_t_10">Almacenar tabla</button>   
+            <button id="eliminar" class="mar_t_10">Eliminar todo</button>  
+        </div>
+    </main>
+</body>
+</html>
