@@ -321,7 +321,7 @@ function recuperarAlmacenamiento(){
 
     //Iniciar petición AJAX
 	const ajax = new XMLHttpRequest(); 
-	ajax.open('GET', 'pedidos.json', true);
+	ajax.open('GET', 'pedidosFruta.json', true);
 	ajax.send();
 
     ajax.onreadystatechange = function(){

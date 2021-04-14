@@ -100,7 +100,6 @@ function almacenarProductos(event){
     let familiaC = document.getElementById('familia').value;
     let precioC = document.getElementById('precio').value;
 
-
     if(resultado){
 
         if(localStorage.getItem("Productos") == null){

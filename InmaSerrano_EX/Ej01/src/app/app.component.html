@@ -1,0 +1,23 @@
+<div class="padre">
+  <table border=1>
+    <th colspan="2" style="text-align:center">Datos</th>
+    <tr>
+      <td>Nombre</td>
+      <td><input class="form-control" [(ngModel)]="nombre" ></td>
+    </tr>
+    <tr>
+      <td>Primer Apellido</td>
+      <td><input class="form-control" [(ngModel)]="primerApellido"></td>
+    </tr>
+    <tr>
+      <td>Edad</td>
+      <td><input class="form-control" type = "number" [(ngModel)]="edad"></td>
+    </tr>
+    <tr>
+      <td>Resultado</td>
+      <td><b>{{ resultadoP }}</b></td>
+    </tr>
+  </table>
+</div>
+
+<app-compo1  [nombre]="nombre" [primerApellido]="primerApellido" [edad]="edad" (password)="capturaResultado($event)"></app-compo1>

@@ -1,3 +1,13 @@
+nav{
+    float: left;
+    width: 10%;
+}
+
+nav button{
+    display:flex;
+    background-color: crimson;
+}
+
 p, div {
     margin:0px; 
     padding: 0px;
@@ -11,8 +21,8 @@ main{width:1100px;
     margin:auto;
 }
 
-#productos{margin-left:20px;
-    width:500px;
+#productos {margin-left:20px;
+    width:45%;
     height:500px;
     float:left;
     overflow:auto;
@@ -22,7 +32,7 @@ main{width:1100px;
 }
 
 #factura{ margin-left:20px;
-    width:500px;
+    width:45%;
     height:500px;
     float:right;
     border:1px solid;

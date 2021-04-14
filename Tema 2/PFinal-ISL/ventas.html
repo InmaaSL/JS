@@ -2,14 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
     <script src="script/ventas_script.js"></script>
     <title>Ventas</title>
 </head>
 <body>
-    <nav></nav>
+    <nav>
+        <button id="gestionClientes" class="mar_t_10 btn-block" onclick="location.href='formularioClientes.html'">Gestión de clientes</button> 
+        <button id="gestionProductos" class="mar_t_10" btn-block onclick="location.href='formularioProductos.html'">Gestión de productos</button>
+        <button id="logout" class="mar_t_10 btn-block">Logout</button>
+    </nav>
     <main>
         <div id="productos">
             
@@ -33,7 +37,7 @@
 
                 <tbody>
                     <tr>
-                        <th class="ancho1" >DNI</th>
+                        <th class="ancho2">DNI.</th>
                         <th class="ancho2">Ref.</th>
                         <th class="ancho3">Precio</th>
                         <th class="ancho3">Cantidad</th>
@@ -48,10 +52,33 @@
                     </tr>
                 </tfoot>
             </table>
+
+            <div>
+                <button id="BorrarCarrito" class="mar_t_10">Borrar carrito</button> 
+            </div>
+
+            <div>
+                <button id="recuperar" class="mar_t_10">Recuperar COMPRA</button> 
+                <button id="almacenar" class="mar_t_10">REALIZAR COMPRA</button>   
+                <button id="eliminar" class="mar_t_10">Eliminar COMPRA</button> 
+            </div>
+
+        </div>
+        <div id="ventas">
+            <h2>Gestión de ventas:</h2>
+            <table id="lineas2">
+                <colgroup>
+                    <col><col><col><col><col><col>
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th class="ancho2">DNI.</th>
+                    </tr>
+                </tbody>
             
-            <button id="recuperar" class="mar_t_10">Recuperar tabla</button> 
-            <button id="almacenar" class="mar_t_10">Almacenar tabla</button>   
-            <button id="eliminar" class="mar_t_10">Eliminar todo</button>  
+            </table>
+        </table>
         </div>
     </main>
 </body>
