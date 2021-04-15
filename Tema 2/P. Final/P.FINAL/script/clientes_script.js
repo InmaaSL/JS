@@ -1,4 +1,13 @@
+
+    const ajax = new XMLHttpRequest(); 
+
 window.onload = function(){
+    //Variables necesarias: 
+    tabla = document.getElementById('tablaClientes');
+    tbodyClientes = document.getElementById('tablaClientes_tbody');
+    
+    arrayClientes = [];
+
     //Botones formulario: 
     btnCancelar = document.getElementById('cancelar');
     btnGuardar = document.getElementById('guardar');
@@ -11,6 +20,24 @@ window.onload = function(){
     btnCancelar.onclick = limpiarForm;
     btnGuardar.onclick = almacenarClientes;
     btnGestion.addEventListener("click", recuperarAlmacenamiento);
+
+    //Cargar archivo con datos de clientes: 
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+
+            var newRow = tbodyClientes.insertRow(1); 
+            contenido = document.createTextNode("No hay clientes registrados");
+            newRow.appendChild(contenido); 
+
+        } else if(this.readyState == 4 && this.status == 200){ 
+            
+            //Pasar de texto a JSON
+			arrayClientes = JSON.parse(this.responseText);
+        }
+    }; 
+
+    ajax.open("GET", "php/infoClientes.json", true); 
+    ajax.send();
 
 }
 
@@ -200,14 +227,6 @@ function limpiarForm(){
 }
 
 function almacenarClientes(event){
-    /* Esta función aunque funciona me da dos errores: 
-    -VM767:1 Uncaught SyntaxError: Unexpected end of JSON input at JSON.parse (<anonymous>)
-    at XMLHttpRequest.ajax.onload (clientes_script.js:233)
-
-    -clientes_script.js:227 GET http://localhost/js/Tema%202/P.%20Final/P.FINAL/php/infoClientes.json 404 
-    (Not Found)
-    */
-
 
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
     resultado = validarCampos();
@@ -220,323 +239,268 @@ function almacenarClientes(event){
     let emailC = document.getElementById('email').value;
     let contrasenyaPC = document.getElementById('contrasenyaP').value;
 
-    //Creamos la petición al servidor:
-    const ajax = new XMLHttpRequest();
-
-
     Clientes = []; 
-    var arrayClientes;
 
     if(resultado){
-        //Comprobamos si existe o no el archivo json: 
-        ajax.onload = function(){
-            if(this.readyState == 4 && this.status == 200){ 
-                //alert("Hay archivo");
+        if (arrayClientes.length == 0 ){ 
+            //Creamos un objeto de tipo cliente: 
+            var id = 1;
+            newCliente = {"id" : id, 
+                        "nombre" : nombreC, 
+                        "apellidos" : apellidosC, 
+                        "dni" : dniC, 
+                        "fechaNac" : fechaNacC, 
+                        "email": emailC, 
+                        "contrasenya": contrasenyaPC,
+                        "borrado" : false
+                    };
+            arrayClientes.push(newCliente);
+            alert("Cliente almacenado correctamente");
+        } else { 
+            var idCliente = arrayClientes[arrayClientes.length - 1]; 
+    
+            //Obtenemos el valor del id: 
+            let id_JSON = idCliente.id;
+            //console.log(id_JSON); 
 
-                    //Pasamos los datos de JSON a array: 
-                    arrayClientes = JSON.parse(this.responseText); 
-                    //console.log(arrayClientes.length); 
+            //Obtenemos el campo id del form: 
+            let id = document.getElementById("id").value;
+    
+            //Cuando creamos los siguientes clientes:
+            if (id == null || id == ""){
+                alert("Creamos nuevo cliente");
+                console.log(id)
 
-                    var idCliente = arrayClientes[arrayClientes.length - 1]; 
-    
-                    //Obtenemos el valor del id: 
-                    let id_JSON = idCliente.id;
-                    //console.log(id_JSON); 
-    
-                    //Obtenemos el campo id del form: 
-                    let id = document.getElementById("id").value;
-    
-                    //Cuando creamos los siguientes clientes:
-                    if (id == null || id == ""){
-                        alert("Creamos nuevo cliente");
-                        console.log(id)
-    
-                        miObj = { id : id_JSON + 1,
-                                        nombre : nombreC, 
-                                        apellidos : apellidosC, 
-                                        dni : dniC, 
-                                        fechaNac : fechaNacC, 
-                                        email: emailC, 
-                                        contrasenya: contrasenyaPC,
-                                        borrado: false
-                        };
-    
-                        arrayClientes.push(miObj);
-                        /*cadenaClientes =JSON.stringify(arrayClientes); 
-                        ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
-                        ajax.send(cadenaClientes); */
-    
-                    } else {
-                        alert("Editamos cliente");
-                        //Cuando editamos un cliente: 
-                        idClienteMod = id - 1; 
-                        console.log(idClienteMod); 
-    
-                        arrayClientes[idClienteMod] = {
-                                                        id : id,
-                                                        nombre : nombreC, 
-                                                        apellidos : apellidosC, 
-                                                        dni : dniC, 
-                                                        fechaNac : fechaNacC, 
-                                                        email: emailC, 
-                                                        contrasenya: contrasenyaPC,
-                                                        borrado: false
-                        };
-                    }
-    
-                    cadenaClientes = JSON.stringify(arrayClientes); 
-                    ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
-                    ajax.send(cadenaClientes); 
-            } 
-            
-            if(this.readyState == 4 && this.status == 404) {
-                //alert("Creo el archivo");
+                miObj = { id : id_JSON + 1,
+                                nombre : nombreC, 
+                                apellidos : apellidosC, 
+                                dni : dniC, 
+                                fechaNac : fechaNacC, 
+                                email: emailC, 
+                                contrasenya: contrasenyaPC,
+                                borrado: false
+                };
+                arrayClientes.push(miObj);
+            } else {
+                alert("Editamos cliente");
+                //Cuando editamos un cliente: 
+                idClienteMod = id - 1; 
+                console.log(idClienteMod); 
 
-                //Creamos un objeto de tipo cliente: 
-                var id = 1;
-                newCliente = {"id" : id, 
-                            "nombre" : nombreC, 
-                            "apellidos" : apellidosC, 
-                            "dni" : dniC, 
-                            "fechaNac" : fechaNacC, 
-                            "email": emailC, 
-                            "contrasenya": contrasenyaPC,
-                            "borrado" : false
-                        };
-                Clientes.push(newCliente);
-                cadenaClientes = JSON.stringify(Clientes); 
-
-                //Abrimos el archivo json e introducimos los datos: 
-                ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
-                ajax.send(cadenaClientes); 
-                alert("Cliente almacenado correctamente");
-
-                //Limpiamos el formulario: 
+                arrayClientes[idClienteMod] = {
+                                                id : id,
+                                                nombre : nombreC, 
+                                                apellidos : apellidosC, 
+                                                dni : dniC, 
+                                                fechaNac : fechaNacC, 
+                                                email: emailC, 
+                                                contrasenya: contrasenyaPC,
+                                                borrado: false
+                };
             }
-        }; 
-
-        ajax.open("GET", "php/infoClientes.json", true); 
-        ajax.send();
+        }
     }
     limpiarForm();
 }
 
 function recuperarAlmacenamiento(){
-    var tabla = document.getElementById('tablaClientes');
 
-    //tabla = document.getElementById('tablaClientes');
     var fila = tabla.getElementsByTagName("tr");
 
     for (let i = fila.length-1; i > 0; i--) {
         tabla.removeChild(fila[i]);
     }
-
-    //Iniciar petición AJAX
-	const ajax = new XMLHttpRequest(); 
-	ajax.open('GET', 'php/infoClientes.json', true);
-	ajax.send();
-
-    ajax.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            //Pasar de texto a JSON
-			let datos = JSON.parse(this.responseText);
-
-            if(datos.length == 0){ 
-                alert("No hay clientes registrados");
-            } else { 
-                //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
-                tbody = document.getElementsByTagName('tbody')[0];
     
-                for(item of datos){
+    if(arrayClientes.length == 0){ 
+        alert("No hay clientes registrados");
+    } else { 
+        //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
+        //tbody = document.getElementsByTagName('tbody')[0];
 
-                    if(item.borrado) { 
-                        alert("El cliente ha sido borrado"); 
+        for(item of arrayClientes){
 
-                        nuevaFila = document.createElement('tr');
-                        nuevaFila.setAttribute('id', item.id)
-                        nuevaFila.setAttribute('class', 'nuevo_Cliente');
-                        nuevaFila.setAttribute('hidden', 'false');
+            if(item.borrado) { 
+                nuevaFila = document.createElement('tr');
+                nuevaFila.setAttribute('id', item.id)
+                nuevaFila.setAttribute('class', 'nuevo_Cliente');
+                nuevaFila.setAttribute('hidden', 'false');
 
-                        //Añadimos la primera celda ID:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'idN');
-                        contenido = document.createTextNode(item.id);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
-                        
-                        //Añadimos la segunda celda NOMBRE:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'nombre');
-                        contenido = document.createTextNode(item.nombre);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la primera celda ID:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'idN');
+                contenido = document.createTextNode(item.id);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la segunda celda NOMBRE:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'nombre');
+                contenido = document.createTextNode(item.nombre);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la tercera celda APELLIDOS:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'apellidos');
-                        contenido = document.createTextNode(item.apellidos);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
-                        
-                        //Añadimos la cuarta celda DNI:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'dni');
-                        contenido = document.createTextNode(item.dni);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la tercera celda APELLIDOS:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'apellidos');
+                contenido = document.createTextNode(item.apellidos);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la cuarta celda DNI:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'dni');
+                contenido = document.createTextNode(item.dni);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda FECHA NACIMIENTO:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'fechaNac');
-                        contenido = document.createTextNode(item.fechaNac);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda FECHA NACIMIENTO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'fechaNac');
+                contenido = document.createTextNode(item.fechaNac);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda EMAIL:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'email');
-                        contenido = document.createTextNode(item.email);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda EMAIL:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'email');
+                contenido = document.createTextNode(item.email);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda CONTRASEÑA:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'contrasenya');
-                        contenido = document.createTextNode(item.contrasenya);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda CONTRASEÑA:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'contrasenya');
+                contenido = document.createTextNode(item.contrasenya);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda BORRADO:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'campoBorrado');
-                        //nuevaCelda.setAttribute('hidden', 'true');
-                        contenido = document.createTextNode(item.borrado);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
+                //Añadimos la quinta celda BORRADO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'campoBorrado');
+                //nuevaCelda.setAttribute('hidden', 'true');
+                contenido = document.createTextNode(item.borrado);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
 
-                        tabla.appendChild(nuevaFila);
+                tabla.appendChild(nuevaFila);
 
-                    } else { 
-                        alert("Cliente no borrado"); 
-                        
-                        //Creamos la fila: 
-                        nuevaFila = document.createElement('tr');
-                        nuevaFila.setAttribute('id', item.id)
-                        nuevaFila.setAttribute('class', 'nuevo_Cliente');
+            } else { 
+                //Creamos la fila: 
+                nuevaFila = document.createElement('tr');
+                nuevaFila.setAttribute('id', item.id)
+                nuevaFila.setAttribute('class', 'nuevo_Cliente');
 
-                        //Añadimos la primera celda ID:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'idN');
-                        contenido = document.createTextNode(item.id);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
-                        
-                        //Añadimos la segunda celda NOMBRE:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'nombre');
-                        contenido = document.createTextNode(item.nombre);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la primera celda ID:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'idN');
+                contenido = document.createTextNode(item.id);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la segunda celda NOMBRE:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'nombre');
+                contenido = document.createTextNode(item.nombre);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la tercera celda APELLIDOS:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'apellidos');
-                        contenido = document.createTextNode(item.apellidos);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
-                        
-                        //Añadimos la cuarta celda DNI:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'dni');
-                        contenido = document.createTextNode(item.dni);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la tercera celda APELLIDOS:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'apellidos');
+                contenido = document.createTextNode(item.apellidos);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+                
+                //Añadimos la cuarta celda DNI:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'dni');
+                contenido = document.createTextNode(item.dni);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda FECHA NACIMIENTO:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'fechaNac');
-                        contenido = document.createTextNode(item.fechaNac);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda FECHA NACIMIENTO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'fechaNac');
+                contenido = document.createTextNode(item.fechaNac);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda EMAIL:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'email');
-                        contenido = document.createTextNode(item.email);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda EMAIL:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'email');
+                contenido = document.createTextNode(item.email);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda CONTRASEÑA:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'contrasenya');
-                        contenido = document.createTextNode(item.contrasenya);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda CONTRASEÑA:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'contrasenya');
+                contenido = document.createTextNode(item.contrasenya);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la quinta celda BORRADO:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('class', 'campoBorrado');
-                        nuevaCelda.setAttribute('hidden', 'false');
-                        contenido = document.createTextNode(item.borrado);
-                        nuevaCelda.appendChild(contenido);
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                //Añadimos la quinta celda BORRADO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'campoBorrado');
+                nuevaCelda.setAttribute('hidden', 'false');
+                contenido = document.createTextNode(item.borrado);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la sexta celda BOTON EDITAR:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('id', 'celda1');
-                        nuevaCelda.innerHTML = '<button id="Editar">Editar</button>';
-                        nuevaCelda.addEventListener("click", function(){
-                                                                id = this.parentNode.getAttribute("id");
+                //Añadimos la sexta celda BOTON EDITAR:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('id', 'celda1');
+                nuevaCelda.innerHTML = '<button id="Editar">Editar</button>';
+                nuevaCelda.addEventListener("click", function(){
+                                                        id = this.parentNode.getAttribute("id");
 
-                                                                document.getElementById("id").value = id;                                         
-                                                                editarCliente(id);
-                                                            });
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
+                                                        document.getElementById("id").value = id;                                         
+                                                        editarCliente(id);
+                                                    });
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
 
-                        //Añadimos la septima celda BOTON BORRAR:
-                        nuevaCelda = document.createElement('td');
-                        nuevaCelda.setAttribute('id', 'celda2');
-                        nuevaCelda.innerHTML = '<button id="baja">Dar de baja</button>';
-                        nuevaCelda.addEventListener("click", function(){
-                                                                
-                                                                id = this.parentNode.getAttribute("id");
+                //Añadimos la septima celda BOTON BORRAR:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('id', 'celda2');
+                nuevaCelda.innerHTML = '<button id="baja">Dar de baja</button>';
+                nuevaCelda.addEventListener("click", function(){
+                                                        
+                                                        id = this.parentNode.getAttribute("id");
 
-                                                                // Selecionamos la tabla de clientes
-                                                                var tabla = document.querySelector('#tablaClientes');
+                                                        // Selecionamos la tabla de clientes
+                                                        var tabla = document.querySelector('#tablaClientes');
 
-                                                                // Seleccionamos todas las filas y las guardamos en la variable filas
-                                                                filas = tabla.getElementsByTagName('tr');
+                                                        // Seleccionamos todas las filas y las guardamos en la variable filas
+                                                        filas = tabla.getElementsByTagName('tr');
 
-                                                                // Seleccionamos todas las celdas de la fila en cada iteración
-                                                                casillas = filas[id].getElementsByTagName("td");
+                                                        // Seleccionamos todas las celdas de la fila en cada iteración
+                                                        casillas = filas[id].getElementsByTagName("td");
 
-                                                                // Ponemos en true la casilla de borrado: 
-                                                                casillas[7].innerText = true;
+                                                        // Ponemos en true la casilla de borrado: 
+                                                        casillas[7].innerText = true;
 
-                                                                // Aquí ejecutamos la función borrarCliente que en realidad lo que hace
-                                                                // es recorrer otra vez la tabla y sobreescribir Clientes en Localstorage
-                                                                borrarCliente();
-                                                            });
-                        nuevaFila.appendChild(nuevaCelda);
-                        tabla.appendChild(nuevaFila);
-                    }
-                }
+                                                        // Aquí ejecutamos la función borrarCliente que en realidad lo que hace
+                                                        // es recorrer otra vez la tabla y sobreescribir Clientes en Localstorage
+                                                        borrarCliente();
+                                                    });
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
             }
         }
     }
@@ -587,26 +551,11 @@ function borrarCliente(){
 
 function editarCliente(id){
 
-    //Cargamos el JSON: 
-    //Iniciar petición AJAX
-	const ajax = new XMLHttpRequest(); 
-    ajax.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            arrayTotal = JSON.parse(this.responseText);
-            console.log(arrayTotal); 
-        } else {
-            alert("Ha ocurrido un error al cargar el archivo"); 
-        }; 
-
-    }
-        ajax.open('GET', 'php/infoClientes.json', true);
-        ajax.send();
-
     //Lo primero vamos a coger el form y sus items: 
-       /* document.getElementById("nombre").value = arrayTotal[id-1].nombre;
-        document.getElementById("apellidos").value = arrayTotal[id-1].apellidos;
-        document.getElementById("dni").value = arrayTotal[id-1].dni;
-        document.getElementById("fechaNac").value = arrayTotal[id-1].fechaNac;
-        document.getElementById("email").value = arrayTotal[id-1].email;*/
+        document.getElementById("nombre").value = arrayClientes[id-1].nombre;
+        document.getElementById("apellidos").value = arrayClientes[id-1].apellidos;
+        document.getElementById("dni").value = arrayClientes[id-1].dni;
+        document.getElementById("fechaNac").value = arrayClientes[id-1].fechaNac;
+        document.getElementById("email").value = arrayClientes[id-1].email;
 
 }

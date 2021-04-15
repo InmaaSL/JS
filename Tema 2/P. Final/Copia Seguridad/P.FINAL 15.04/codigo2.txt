@@ -1,0 +1,113 @@
+function almacenarClientes(event){
+    //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
+    resultado = validarCampos();
+
+    //Recogemos las variables necesarias:
+    let nombreC = document.getElementById('nombre').value;
+    let apellidosC = document.getElementById('apellidos').value;
+    let dniC = document.getElementById('dni').value;
+    let fechaNacC = document.getElementById('fechaNac').value;
+    let emailC = document.getElementById('email').value;
+    let contrasenyaPC = document.getElementById('contrasenyaP').value;
+
+    //Creamos la petición al servidor:
+    const ajax = new XMLHttpRequest();
+
+    Clientes = []; 
+    var arrayClientes;
+
+    var registroClientes = ajax.open('GET', 'php/infoClientes.json', true); 
+    console.log(registroClientes); 
+
+    if(resultado){
+        //Primer cliente que creamos: 
+        if(registroClientes == null){
+            alert("Primer if");
+            //Creamos un objeto de tipo cliente: 
+            var id = 1;
+            newCliente = {"id" : id, 
+                        "nombre" : nombreC, 
+                        "apellidos" : apellidosC, 
+                        "dni" : dniC, 
+                        "fechaNac" : fechaNacC, 
+                        "email": emailC, 
+                        "contrasenya": contrasenyaPC,
+                        "borrado" : false
+                    };
+            Clientes.push(newCliente);
+            cadenaClientes = JSON.stringify(Clientes); 
+            ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
+            ajax.send(cadenaClientes); 
+            
+        } else {
+        //Siguientes clientes creados: 
+        
+            alert("Primer else");
+            //Comprobamos si está el archivo: 
+            ajax.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){ 
+                    var res = this.responseText; 
+                    var converRes = JSON.parse(res);
+                    arrayClientes = converRes[0]; 
+
+                    id = arrayClientes.id;
+                    console.log(id); 
+
+                    if (id == null || id == ""){
+                        alert("Segundo if");
+                        console.log(id)
+        
+                        miObj = { id : arrayClientes.length + 1,
+                                        nombre : nombreC, 
+                                        apellidos : apellidosC, 
+                                        dni : dniC, 
+                                        fechaNac : fechaNacC, 
+                                        email: emailC, 
+                                        contrasenya: contrasenyaPC,
+                                        borrado: false
+                        };
+
+                        arrayClientes.push(miObj);
+                        cadenaClientes =JSON.stringify(Clientes); 
+                        ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
+                        ajax.send(cadenaClientes); 
+
+                    } else {
+                        alert("segundo else");
+
+                        idClienteMod = id - 1; 
+                        console.log(idClienteMod); 
+
+                        arrayClientes[idClienteMod] = {
+                                                        id : id,
+                                                        nombre : nombreC, 
+                                                        apellidos : apellidosC, 
+                                                        dni : dniC, 
+                                                        fechaNac : fechaNacC, 
+                                                        email: emailC, 
+                                                        contrasenya: contrasenyaPC,
+                                                        borrado: false
+                        };
+                    }
+
+                    /*cadenaClientes = JSON.stringify(arrayClientes); 
+                    ajax.open('POST', 'php/datos_clientes.php?param=' + cadenaClientes, true); 
+                    ajax.send(cadenaClientes); */
+
+                }
+                ajax.open("GET", "php/infoClientes.json", true); 
+                ajax.send();
+            }; 
+
+        }
+        limpiarForm();
+
+    }
+
+
+
+    //Obtenemos la tabla: 
+    tabla = document.getElementsByTagName("table")[0]; 
+
+
+}

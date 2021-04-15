@@ -1,0 +1,59 @@
+//Recogemos las variables necesarias:
+    let nombreC = document.getElementById('nombre').value;
+    let apellidosC = document.getElementById('apellidos').value;
+    let dniC = document.getElementById('dni').value;
+    let fechaNacC = document.getElementById('fechaNac').value;
+    let emailC = document.getElementById('email').value;
+    let contrasenyaPC = document.getElementById('contrasenyaP').value;
+
+    if(resultado){
+
+        if(localStorage.getItem("Clientes") == null){
+            //Creamos un objeto de tipo cliente: 
+            var id = 1;
+            newCliente = {"id" : id, 
+                        "nombre" : nombreC, 
+                        "apellidos" : apellidosC, 
+                        "dni" : dniC, 
+                        "fechaNac" : fechaNacC, 
+                        "email": emailC, 
+                        "contrasenya": contrasenyaPC,
+                        "borrado" : false
+                    };
+            Clientes.push(newCliente);
+            localStorage.setItem("Clientes", JSON.stringify(Clientes));
+        } else {
+            var arrayClientes;
+            id = document.getElementById("id").value;
+            // alert( "que id" + id);
+            if (id==null || id == ""){
+                arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
+                miObj = { id : arrayClientes.length + 1,
+                                nombre : nombreC, 
+                                apellidos : apellidosC, 
+                                dni : dniC, 
+                                fechaNac : fechaNacC, 
+                                email: emailC, 
+                                contrasenya: contrasenyaPC,
+                                borrado: false
+                };
+                //Añadimos el nuevo cliente al array: 
+                arrayClientes.push(miObj);
+            } else {
+                arrayClientes = JSON.parse(localStorage.getItem("Clientes"));
+                idClienteMod = id - 1; 
+                arrayClientes[idClienteMod] = {
+                                                id : id,
+                                                nombre : nombreC, 
+                                                apellidos : apellidosC, 
+                                                dni : dniC, 
+                                                fechaNac : fechaNacC, 
+                                                email: emailC, 
+                                                contrasenya: contrasenyaPC,
+                                                borrado: false
+                };
+            }
+            localStorage.setItem("Clientes", JSON.stringify(arrayClientes));
+        }
+        limpiarForm();
+    }
