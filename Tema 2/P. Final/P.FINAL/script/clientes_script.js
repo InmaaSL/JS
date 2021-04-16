@@ -28,7 +28,7 @@ window.onload = function(){
             var newRow = tbodyClientes.insertRow(1); 
             contenido = document.createTextNode("No hay clientes registrados");
             newRow.appendChild(contenido); 
-
+            
         } else if(this.readyState == 4 && this.status == 200){ 
             
             //Pasar de texto a JSON
@@ -217,7 +217,6 @@ function validarCampos(){
     }
     
     return resultado;
-    
 }
 
 function limpiarForm(){
@@ -227,7 +226,6 @@ function limpiarForm(){
 }
 
 function almacenarClientes(event){
-
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
     resultado = validarCampos();
 
@@ -258,18 +256,20 @@ function almacenarClientes(event){
             alert("Cliente almacenado correctamente");
         } else { 
             var idCliente = arrayClientes[arrayClientes.length - 1]; 
+            //console.log("idCliente " + idCliente);
     
             //Obtenemos el valor del id: 
             let id_JSON = idCliente.id;
-            //console.log(id_JSON); 
+            //console.log("id_JSON " + id_JSON);
 
             //Obtenemos el campo id del form: 
             let id = document.getElementById("id").value;
+            //console.log("id tabla: " + id); 
     
             //Cuando creamos los siguientes clientes:
             if (id == null || id == ""){
-                alert("Creamos nuevo cliente");
-                console.log(id)
+                //alert("Creamos nuevo cliente");
+                console.log(id);
 
                 miObj = { id : id_JSON + 1,
                                 nombre : nombreC, 
@@ -282,13 +282,13 @@ function almacenarClientes(event){
                 };
                 arrayClientes.push(miObj);
             } else {
-                alert("Editamos cliente");
+                //alert("Editamos cliente");
                 //Cuando editamos un cliente: 
                 idClienteMod = id - 1; 
                 console.log(idClienteMod); 
 
                 arrayClientes[idClienteMod] = {
-                                                id : id,
+                                                id : parseInt(id),
                                                 nombre : nombreC, 
                                                 apellidos : apellidosC, 
                                                 dni : dniC, 
@@ -300,12 +300,17 @@ function almacenarClientes(event){
             }
         }
     }
-    limpiarForm();
+    ActualizarClientes();
+
+    //Actualizamos la página:
+    location.reload();
+    //limpiarForm();
 }
 
 function recuperarAlmacenamiento(){
 
     var fila = tabla.getElementsByTagName("tr");
+    //console.log(fila.length);
 
     for (let i = fila.length-1; i > 0; i--) {
         tabla.removeChild(fila[i]);
@@ -483,21 +488,16 @@ function recuperarAlmacenamiento(){
                                                         
                                                         id = this.parentNode.getAttribute("id");
 
-                                                        // Selecionamos la tabla de clientes
-                                                        var tabla = document.querySelector('#tablaClientes');
+                                                        console.log(arrayClientes[id-1].id); 
 
-                                                        // Seleccionamos todas las filas y las guardamos en la variable filas
-                                                        filas = tabla.getElementsByTagName('tr');
+                                                        arrayClientes[id-1].borrado = true; 
+                                                        console.log(arrayClientes[id-1].borrado);
 
-                                                        // Seleccionamos todas las celdas de la fila en cada iteración
-                                                        casillas = filas[id].getElementsByTagName("td");
+                                                        ActualizarClientes();
 
-                                                        // Ponemos en true la casilla de borrado: 
-                                                        casillas[7].innerText = true;
-
-                                                        // Aquí ejecutamos la función borrarCliente que en realidad lo que hace
-                                                        // es recorrer otra vez la tabla y sobreescribir Clientes en Localstorage
-                                                        borrarCliente();
+                                                        //Actualizamos la página:
+                                                        location.reload();
+                                                        
                                                     });
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
@@ -507,49 +507,8 @@ function recuperarAlmacenamiento(){
 
 }
 
-function borrarCliente(){
-    // Creamos un array vacío donde guardaremos todos los clientes de la tabla.
-    var listaClientes = [];
-
-    // Selecionamos la tabla de clientes
-    var tabla = document.querySelector('#tablaClientes');
-
-    // Seleccionamos todas las filas y las guardamos en la variable filas
-    filas = tabla.getElementsByTagName('tr');
-
-    // Recorremos las filas
-    for (var i = 1; i < filas.length; i++) {
-
-        // Seleccionamos todas las celdas de la fila en cada iteración
-        casillas = filas[i].getElementsByTagName("td");
-
-            obj = {        
-                    id:casillas[0].innerText,
-                    nombre:casillas[1].innerText,
-                    apellidos:casillas[2].innerText,
-                    dni:casillas[3].innerText,
-                    fechaNac: casillas[4].innerText, 
-                    email: casillas[5].innerText, 
-                    contrasenya: casillas[6].innerText,
-                    borrado: casillas[7].innerText
-
-                    }; 
-                    
-            // Subimos al array el objeto
-            listaClientes.push(obj);
-    }
-
-    // Una vez tenemos el array de objetos lo pasamos a cadena de texto con stringify
-    clientes = JSON.stringify(listaClientes);
-
-    // Y sobreescribimos en localStorage.
-    localStorage.Clientes = clientes;
-
-    //Redirecciona a la tabla actualizada: 
-    window.location.href = "formularioClientes.html";
-}
-
 function editarCliente(id){
+    //usar arrayclientes! 
 
     //Lo primero vamos a coger el form y sus items: 
         document.getElementById("nombre").value = arrayClientes[id-1].nombre;
@@ -558,4 +517,20 @@ function editarCliente(id){
         document.getElementById("fechaNac").value = arrayClientes[id-1].fechaNac;
         document.getElementById("email").value = arrayClientes[id-1].email;
 
+}
+
+function ActualizarClientes(){ 
+    //Actualizar archivo con datos de clientes: 
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+            alert("Ha ocurrido un error al actualizar el registro"); 
+
+        } else if(this.readyState == 4 && this.status == 200){ 
+            console.log("Registro de clientes actualizado"); 
+        }
+    }; 
+
+    nuevoArray = JSON.stringify(arrayClientes); 
+    ajax.open("POST", "php/datos_clientes.php?param=" + nuevoArray, true); 
+    ajax.send();
 }
