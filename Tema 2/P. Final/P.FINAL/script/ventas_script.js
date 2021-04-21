@@ -1,230 +1,195 @@
+
+    const ajax = new XMLHttpRequest(); 
+    const ajax2 = new XMLHttpRequest();
+    const ajax3 = new XMLHttpRequest();
+
 window.onload = function(){
+    //Creamos los arrays necesarios: 
+    arrayClientes = []; 
+    arrayProductos = []; 
+    arrayVentas = []; 
 
-    //Conseguir los valores del usuario: 
-    //Recuperar Usuario con las cookies: 
-    dniCaja = document.getElementById("dni");
-    var x = document.cookie;
-    var arrayCookies = x.split('=');
-    nombreUsuario = arrayCookies[0];
+    //Cargamos esos arrays con la información que tenemos guardada en los archivos JSON:
+    obtenerClientes();
+    obtenerProductos();
+    //obtenerVentas();
 
-    // alert(arrayCookies[0] + "valor de x")
-    // if(arrayCookies[0].value == null){
-    //     alert("Ha expirado la sesión");
-    //     borrarCarrito();
-    // }
+    // console.log("arrayclientes: " + arrayClientes);
+    // console.log("arrayproductos: " + arrayProductos);
+    // console.log("arrayventas: " + arrayVentas);
 
-    //Cargamos el localStorage para buscar el dni del cliente: 
-    arrayTotal = JSON.parse(localStorage.getItem("Clientes"));
-    for (let i = 0; i < arrayTotal.length; i++) {
-        if(arrayTotal[i].email == nombreUsuario){
-            dniCliente = arrayTotal[i].dni;
-            dniCaja.value = dniCliente;
-        }
-    }
-
-
-    //Cargamos el localStorage: 
-    productos = JSON.parse(localStorage.getItem("Productos"));
-
-    //Recogemos div productos: 
+    //Recogemos div productos para rellenarlo con los que tenemos en el arrayProductos: 
     productosDIV = document.getElementById("productos");
 
-    //Recuperamos los productos y los ponemos bonitos:        
-    for (var i = 0; i < productos.length; i++) {
-        //Cogemos la información relevante; 
-        contenidoReferencia = document.createTextNode(productos[i].referencia);
-        contenidoDescripcion = document.createTextNode(productos[i].descripcion);
-        contenidoFamilia = document.createTextNode(productos[i].familia);
-        contenidoPrecio = document.createTextNode(productos[i].precio);   
+}
 
-        productosBorrados = productos[i].borrado;
-
-        if(productosBorrados == "true"){
-            nuevoDIV = document.createElement('div');
-            nuevoDIV.setAttribute('id', productos[i].id)
-            nuevoDIV.setAttribute('class', 'fpeque');
-            nuevoDIV.setAttribute('hidden', 'false');
-
-                hijoDIV = document.createElement('div');
-
-                    parrafoHijo1 = document.createElement('p');
-                        codigoRef = document.createTextNode("Ref.");
-                        parrafoHijo1.appendChild(codigoRef);
-
-                        spanHijo1 = document.createElement("span");
-                        spanHijo1.appendChild(contenidoReferencia);
-                        parrafoHijo1.appendChild(spanHijo1);
-                        hijoDIV.appendChild(parrafoHijo1);
-                        //productosDIV.appendChild(nuevoDIV);
-
-                    parrafoHijo2 = document.createElement('p');
-                        codigoDesc = document.createTextNode("Desc.");
-                        parrafoHijo2.appendChild(codigoDesc);
-
-                        spanHijo2 = document.createElement("span");
-                        spanHijo2.appendChild(contenidoDescripcion);
-                        parrafoHijo2.appendChild(spanHijo2);
-                        hijoDIV.appendChild(parrafoHijo2);
-                        //productosDIV.appendChild(nuevoDIV);
-                        
-                    parrafoHijo3 = document.createElement('p');
-                        codigoFam = document.createTextNode("Familia:");
-                        parrafoHijo3.appendChild(codigoFam);
-
-                        spanHijo3 = document.createElement("span");
-                        spanHijo3.appendChild(contenidoFamilia);
-                        parrafoHijo3.appendChild(spanHijo3);
-                        hijoDIV.appendChild(parrafoHijo3);
-                        //productosDIV.appendChild(nuevoDIV);
-                        
-                    parrafoHijo4 = document.createElement('p');
-                        codigoPrecio = document.createTextNode("Precio:");
-                        parrafoHijo4.appendChild(codigoPrecio);
-
-                        spanHijo4 = document.createElement("span");
-                        spanHijo4.appendChild(contenidoPrecio);
-                        parrafoHijo4.appendChild(spanHijo4);
-
-                        simboloEuro = document.createTextNode("€");
-                        parrafoHijo4.appendChild(simboloEuro);
-                        hijoDIV.appendChild(parrafoHijo4);
-                        //productosDIV.appendChild(nuevoDIV);
-            
-            nuevoDIV.appendChild(hijoDIV);
-            productosDIV.appendChild(nuevoDIV);
-
-        }else {
-            nuevoDIV = document.createElement('div');
-            nuevoDIV.setAttribute('id', productos[i].id)
-            nuevoDIV.setAttribute('class', 'fpeque');
-
-                hijoDIV = document.createElement('div');
-
-                    parrafoHijo1 = document.createElement('p');
-                        codigoRef = document.createTextNode("Ref.");
-                        parrafoHijo1.appendChild(codigoRef);
-
-                        spanHijo1 = document.createElement("span");
-                        spanHijo1.appendChild(contenidoReferencia);
-                        parrafoHijo1.appendChild(spanHijo1);
-                        hijoDIV.appendChild(parrafoHijo1);
-                        //productosDIV.appendChild(nuevoDIV);
-
-                    parrafoHijo2 = document.createElement('p');
-                        codigoDesc = document.createTextNode("Desc.");
-                        parrafoHijo2.appendChild(codigoDesc);
-
-                        spanHijo2 = document.createElement("span");
-                        spanHijo2.appendChild(contenidoDescripcion);
-                        parrafoHijo2.appendChild(spanHijo2);
-                        hijoDIV.appendChild(parrafoHijo2);
-                        //productosDIV.appendChild(nuevoDIV);
-                        
-                    parrafoHijo3 = document.createElement('p');
-                        codigoFam = document.createTextNode("Familia:");
-                        parrafoHijo3.appendChild(codigoFam);
-
-                        spanHijo3 = document.createElement("span");
-                        spanHijo3.appendChild(contenidoFamilia);
-                        parrafoHijo3.appendChild(spanHijo3);
-                        hijoDIV.appendChild(parrafoHijo3);
-                        //productosDIV.appendChild(nuevoDIV);
-                        
-                    parrafoHijo4 = document.createElement('p');
-                        codigoPrecio = document.createTextNode("Precio:");
-                        parrafoHijo4.appendChild(codigoPrecio);
-
-                        spanHijo4 = document.createElement("span");
-                        spanHijo4.appendChild(contenidoPrecio);
-                        parrafoHijo4.appendChild(spanHijo4);
-
-                        simboloEuro = document.createTextNode("€");
-                        parrafoHijo4.appendChild(simboloEuro);
-                        hijoDIV.appendChild(parrafoHijo4);
-                        //productosDIV.appendChild(nuevoDIV);
-            
-            nuevoDIV.appendChild(hijoDIV);
-            productosDIV.appendChild(nuevoDIV);
+function obtenerClientes(){
+    //Cargar archivo con datos de clientes: 
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+            alert("No hay clientes registrados");
+        } else if(this.readyState == 4 && this.status == 200){ 
+            //Pasar de texto a JSON
+			arrayClientes = JSON.parse(this.responseText);
+            console.log(arrayClientes);
         }
-    }    
+    }; 
+    ajax.open("GET", "php/infoClientes.json", true); 
+    ajax.send();
+}
 
-    //*******************************************************************************/
-    //Recuperamos las compras realizadas: 
-    //Obtenemos primero la cantidad de elementos guardados en el storage:
-    arrayItems = JSON.parse(localStorage.getItem("Compras"));
+function obtenerProductos(){
+    //Cargar archivo con datos de productos: 
+    ajax2.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+            alert("No hay productos en stock");  
+        } else if(this.readyState == 4 && this.status == 200){ 
+            //Pasar de texto a JSON
+			arrayProductos = JSON.parse(this.responseText);
+            RecuperarProductos();
+        }
+    }; 
+    ajax2.open("GET", "php/infoProductos.json", true); 
+    ajax2.send();
+}
 
-    //Obtenemos la tabla:
-    tabla = document.getElementsByTagName("tbody")[0];
+function obtenerVentas(){
+        //Cargar archivo con datos de productos: 
+        ajax3.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 404) {
+                alert("No hay ventas realizadas");  
+            } else if(this.readyState == 4 && this.status == 200){ 
+                //Pasar de texto a JSON
+                arrayVentas = JSON.parse(this.responseText);
+            }
+        }; 
     
-    //Obtenemos cada fila de la tabla que nos interesa: 
-    filas = tabla.getElementsByClassName("nuevo_Articulo");
-    
-    //Nos quedamos solo con los artículos y no con la "fila enunciado":
-    articulos = filas.length;
+        ajax3.open("GET", "php/infoVentas.json", true); 
+        ajax3.send();
+}
 
-    if(arrayItems != null){
-        if(articulos == 0){
-            //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
-            for (var i = 0; i < arrayItems.length; i++) {	
+function RecuperarProductos(){ 
+    if(arrayProductos.length == 0){
+        alert("No hay productos de stock");
+    } else {         
+        for(item of arrayProductos){
+            if(item.borrado){
+                nuevoDIV = document.createElement('div');
+                nuevoDIV.setAttribute('id', item.id)
+                nuevoDIV.setAttribute('class', 'fpeque');
+                nuevoDIV.setAttribute('hidden', 'false');
 
-                //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
-                tbody = document.getElementsByTagName('tbody')[1];
+                hijoDIV = document.createElement('div');
+
+                parrafoHijo1 = document.createElement('p');
+                    codigoRef = document.createTextNode("Ref.");
+                    parrafoHijo1.appendChild(codigoRef);
+
+                    spanHijo1 = document.createElement("span");
+                    contenidoReferencia = document.createTextNode(item.referencia);
+                    spanHijo1.appendChild(contenidoReferencia);
+                    parrafoHijo1.appendChild(spanHijo1);
+                    hijoDIV.appendChild(parrafoHijo1);
+                    //productosDIV.appendChild(nuevoDIV);
+
+                parrafoHijo2 = document.createElement('p');
+                    codigoDesc = document.createTextNode("Desc.");
+                    parrafoHijo2.appendChild(codigoDesc);
+
+                    spanHijo2 = document.createElement("span");
+                    contenidoDescripcion = document.createTextNode(item.descripcion);
+                    spanHijo2.appendChild(contenidoDescripcion);
+                    parrafoHijo2.appendChild(spanHijo2);
+                    hijoDIV.appendChild(parrafoHijo2);
+                    //productosDIV.appendChild(nuevoDIV);
+                    
+                parrafoHijo3 = document.createElement('p');
+                    codigoFam = document.createTextNode("Familia:");
+                    parrafoHijo3.appendChild(codigoFam);
+
+                    spanHijo3 = document.createElement("span");
+                    contenidoFamilia = document.createTextNode(item.familia);
+                    spanHijo3.appendChild(contenidoFamilia);
+                    parrafoHijo3.appendChild(spanHijo3);
+                    hijoDIV.appendChild(parrafoHijo3);
+                    //productosDIV.appendChild(nuevoDIV);
+                    
+                parrafoHijo4 = document.createElement('p');
+                    codigoPrecio = document.createTextNode("Precio:");
+                    parrafoHijo4.appendChild(codigoPrecio);
+
+                    spanHijo4 = document.createElement("span");
+                    contenidoPrecio = document.createTextNode(item.precio);   
+                    spanHijo4.appendChild(contenidoPrecio);
+                    parrafoHijo4.appendChild(spanHijo4);
+
+                    simboloEuro = document.createTextNode("€");
+                    parrafoHijo4.appendChild(simboloEuro);
+                    hijoDIV.appendChild(parrafoHijo4);
+                    //productosDIV.appendChild(nuevoDIV);
         
-                //Creamos la fila: 
-                nuevaFila = document.createElement('tr');
-                nuevaFila.setAttribute('class', 'nuevo_Articulo');
-                contenidoREF = document.createTextNode(arrayItems[i].dni);
-                nuevaFila.appendChild(contenidoREF);
+        nuevoDIV.appendChild(hijoDIV);
+        productosDIV.appendChild(nuevoDIV);
 
+            }else {
+                nuevoDIV = document.createElement('div');
+                nuevoDIV.setAttribute('id', item.id)
+                nuevoDIV.setAttribute('class', 'fpeque');
 
-                //Añadimos la cuarta celda TOTAL:
-                nuevaCeldaTOT = document.createElement('td');
-                nuevaCeldaTOT.setAttribute('class', 'total');
-                total = (parseFloat(cantidad.value) * parseFloat(precio.value)).toFixed(2);
-                contenidoTOT = document.createTextNode(arrayItems[i].total);
-                nuevaCeldaTOT.appendChild(contenidoTOT);
-                nuevaFila.appendChild(nuevaCeldaTOT);
-                tbody.appendChild(nuevaFila);
-            } 
-            calculaTotal();
-        }else {
-            alert('Almacenamiento recuperado');
+                hijoDIV = document.createElement('div');
+
+                parrafoHijo1 = document.createElement('p');
+                    codigoRef = document.createTextNode("Ref.");
+                    parrafoHijo1.appendChild(codigoRef);
+
+                    spanHijo1 = document.createElement("span");
+                    contenidoReferencia = document.createTextNode(item.referencia);
+                    spanHijo1.appendChild(contenidoReferencia);
+                    parrafoHijo1.appendChild(spanHijo1);
+                    hijoDIV.appendChild(parrafoHijo1);
+                    //productosDIV.appendChild(nuevoDIV);
+
+                parrafoHijo2 = document.createElement('p');
+                    codigoDesc = document.createTextNode("Desc.");
+                    parrafoHijo2.appendChild(codigoDesc);
+
+                    spanHijo2 = document.createElement("span");
+                    contenidoDescripcion = document.createTextNode(item.descripcion);
+                    spanHijo2.appendChild(contenidoDescripcion);
+                    parrafoHijo2.appendChild(spanHijo2);
+                    hijoDIV.appendChild(parrafoHijo2);
+                    //productosDIV.appendChild(nuevoDIV);
+                    
+                parrafoHijo3 = document.createElement('p');
+                    codigoFam = document.createTextNode("Familia:");
+                    parrafoHijo3.appendChild(codigoFam);
+
+                    spanHijo3 = document.createElement("span");
+                    contenidoFamilia = document.createTextNode(item.familia);
+                    spanHijo3.appendChild(contenidoFamilia);
+                    parrafoHijo3.appendChild(spanHijo3);
+                    hijoDIV.appendChild(parrafoHijo3);
+                    //productosDIV.appendChild(nuevoDIV);
+                    
+                parrafoHijo4 = document.createElement('p');
+                    codigoPrecio = document.createTextNode("Precio:");
+                    parrafoHijo4.appendChild(codigoPrecio);
+
+                    spanHijo4 = document.createElement("span");
+                    contenidoPrecio = document.createTextNode(item.precio);   
+                    spanHijo4.appendChild(contenidoPrecio);
+                    parrafoHijo4.appendChild(spanHijo4);
+
+                    simboloEuro = document.createTextNode("€");
+                    parrafoHijo4.appendChild(simboloEuro);
+                    hijoDIV.appendChild(parrafoHijo4);
+                    //productosDIV.appendChild(nuevoDIV);
+                
+                nuevoDIV.appendChild(hijoDIV);
+                productosDIV.appendChild(nuevoDIV);
+            }
         }
-
-    } else {
-        alert('No hay informacion en el Storage')
     }
-    /***************************************
-     * 
-     * Comienza la magia: 
-     * 
-     ***************************************/
-    
-
-    //Obtenemos los botones grabar y cancelar: 
-    botonGrabar = document.getElementById('grabar');
-    botonCancelar = document.getElementById('cancelar');
-    botonAlmacenar = document.getElementById('almacenar');
-    botonRecuperar = document.getElementById('recuperar');
-    botonEliminar = document.getElementById('eliminar');
-    botonBorrarCarrito = document.getElementById("BorrarCarrito");
-
-    //Obtenemos el valor de los cuadrados con la fruta para cuando hagamos doble click:
-    botones = document.getElementsByClassName('fpeque');
-
-    //Dobleclick:
-    for (let x = 0; x < botones.length; x++){
-        botones[x].ondblclick = ponerProducto;
-    }
-
-    //Click: 
-    botonGrabar.onclick = anyadirFila;
-    botonCancelar.onclick = limpiarForm;
-    botonAlmacenar.onclick = realizarCOMPRA;
-    botonEliminar.onclick = eliminarCOMPRA;
-    botonRecuperar.onclick = recuperarCOMPRA;
-    botonBorrarCarrito.onclick = borrarCarrito;
-
 }
 
 function ponerProducto(){

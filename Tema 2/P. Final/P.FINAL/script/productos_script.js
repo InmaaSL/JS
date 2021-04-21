@@ -1,34 +1,60 @@
 
+    const ajax = new XMLHttpRequest();
+
 window.onload = function(){
+    //Variables necesarias: 
+    tabla = document.getElementById('tablaProductos');
+    tbodyProductos = document.getElementById('tablaProductos_tbody');
+
+    arrayProductos = []; 
+
     //Botones formulario: 
     btnCancelar = document.getElementById('cancelar');
     btnGuardar = document.getElementById('guardar');
     btnGestion = document.getElementById('gestion');     
 
-    //Botones clientes: 
+    //Botones productos: 
     btnBaja = document.getElementById("borrarProducto");
     
     //Funciones en funcionamiento: 
-    btnCancelar.onclick = limpiarForm;
-    btnGuardar.onclick = almacenarProductos;
-    btnGestion.addEventListener("click", recuperarAlmacenamiento);
+    btnCancelar.onclick = LimpiarForm;
+    btnGuardar.onclick = AlmacenarProductos;
+    //btnGestion.addEventListener("click", RecuperarAlmacenamiento);
 
+    //Cargar archivo con datos de productos: 
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
 
-    //Cargamos el localStorage: 
-    arrayTotal = JSON.parse(localStorage.getItem("Productos"));
+            var newRow = tbodyProductos.insertRow(1); 
+            contenido = document.createTextNode("No hay productos en stock");
+            newRow.appendChild(contenido); 
+            
+        } else if(this.readyState == 4 && this.status == 200){ 
+            //Pasar de texto a JSON
+			arrayProductos = JSON.parse(this.responseText);
+            console.log(arrayProductos);
+
+            RecuperarAlmacenamiento();
+        }
+    }; 
+
+    ajax.open("GET", "php/infoProductos.json", true); 
+    ajax.send();
 }
 
-function validarCampos(){
+function ValidarCampos(){
     //Recogemos los campos a validar: 
     let referencia = document.getElementById('referencia');
     let descripcion = document.getElementById('descripcion');
     let familia = document.getElementById('familia');
+    let stock = document.getElementById('stock'); 
     let precio = document.getElementById('precio');
 
     //Recogemos los campos donde anoraremos errores: 
     let errorReferencia = document.getElementById('errorReferencia');
     let errorDescripcion = document.getElementById('errorDescripcion');
     let errorFamilia = document.getElementById('errorFamilia');
+    let errorStock = document.getElementById('errorStock'); 
     let errorPrecio = document.getElementById('errorPrecio');
     
     //Asignamos una variable para comprobar el estado de las validaciones: 
@@ -38,7 +64,7 @@ function validarCampos(){
     if (referencia.value == null || referencia.value.length == 0 || /^\s+$/.test(referencia.value)) {
         referencia.style.backgroundColor = "rgba(255,155,155,0.4)";
         referencia.focus();
-        errorReferencia.innerHTML = "El nombre no puede estar vacío";
+        errorReferencia.innerHTML = "El nº de referencia no es correcto.";
 		resultado = false;
     } else {
         referencia.innerHTML = referencia.value;
@@ -49,7 +75,7 @@ function validarCampos(){
     if (descripcion.value == null || descripcion.value.length == 0 || /^\s+$/.test(descripcion.value)) {
         descripcion.style.backgroundColor = "rgba(255,155,155,0.4)";
         descripcion.focus();
-        errorDescripcion.innerHTML = "Los apellidos no pueden estar vacíos";
+        errorDescripcion.innerHTML = "El campo descripción no puede estar vacío.";
 		resultado = false;
     } else {
         descripcion.innerHTML = descripcion.value;
@@ -60,18 +86,29 @@ function validarCampos(){
     if (familia.value == null || familia.value.length == 0 || /^\s+$/.test(familia.value)) {
         familia.style.backgroundColor = "rgba(255,155,155,0.4)";
         familia.focus();
-        errorFamilia.innerHTML = "El nombre no puede estar vacío";
+        errorFamilia.innerHTML = "El campo familia no puede estar vacío.";
 		resultado = false;
     } else {
         familia.innerHTML = familia.value;
         errorFamilia.innerHTML = "";
         familia.style.backgroundColor = "#FFF";
     }
+
+    if (stock.value == null || stock.value <= 0 || stock.value.length == 0 || isNaN(stock.value)) {
+        stock.style.backgroundColor = "rgba(255,155,155,0.4)";
+        stock.focus();
+        errorStock.innerHTML = "La cantidad de stock no es correcta";
+		resultado = false;
+    } else {
+        stock.innerHTML = precio.value;
+        errorStock.innerHTML = "";
+        stock.style.backgroundColor = "#FFF";
+    }
     
     if (precio.value == null || precio.value.length == 0 || isNaN(precio.value)) {
         precio.style.backgroundColor = "rgba(255,155,155,0.4)";
         precio.focus();
-        errorPrecio.innerHTML = "Los apellidos no pueden estar vacíos";
+        errorPrecio.innerHTML = "El campo precio no puede estar vacío.";
 		resultado = false;
     } else {
         precio.innerHTML = precio.value;
@@ -82,74 +119,82 @@ function validarCampos(){
     return resultado;
 }
 
-function limpiarForm(){
+function LimpiarForm(){
     //Obtenemos el formulario y lo ponemos en blanco: 
 	form = document.getElementById('productosForm');
 	form.reset();
 }
 
-function almacenarProductos(event){
+function AlmacenarProductos(event){
     //Validamos primero los datos, para ello recogemos el resultado de validar en una variable.
-    resultado = validarCampos();
-
-    Productos = [];
+    resultado = ValidarCampos();
 
     //Recogemos las variables necesarias:
     let referenciaC = document.getElementById('referencia').value;
     let descripcionC = document.getElementById('descripcion').value;
     let familiaC = document.getElementById('familia').value;
+    let stockC = document.getElementById('stock').value; 
     let precioC = document.getElementById('precio').value;
 
     if(resultado){
 
-        if(localStorage.getItem("Productos") == null){
+        if(arrayProductos.length == 0){
             //Creamos un objeto de tipo productos: 
             var id = 1;
             newProducto = {"id" : id,
                         "referencia" : referenciaC, 
                         "descripcion" : descripcionC, 
                         "familia" : familiaC, 
+                        "stock" : stockC,
                         "precio" : precioC, 
                         "borrado" : false
                     };
-            Productos.push(newProducto);
-            localStorage.setItem("Productos", JSON.stringify(Productos));
-        } else {
-            var arrayProductos;
-            id = document.getElementById("id").value;
+            arrayProductos.push(newProducto);
+            alert("Producto almacenado correctamente"); 
 
-            if (id==null || id == ""){
-                arrayProductos = JSON.parse(localStorage.getItem("Productos"));
-                miObj = { id : arrayProductos.length + 1,
+        } else {
+            var idProducto = arrayProductos[arrayProductos.length - 1]; 
+
+            //Obtenemos el valor del id del producto: 
+            let id_JSON = idProducto.id; 
+
+            let id = document.getElementById("id").value; 
+
+            if (id == null || id == ""){
+
+                miObj = { id : id_JSON + 1,
                                 referencia : referenciaC, 
                                 descripcion : descripcionC, 
                                 familia : familiaC, 
+                                stock : stockC,
                                 precio : precioC, 
                                 borrado: false
                 };
                 //Añadimos el nuevo producto al array: 
                 arrayProductos.push(miObj);
+                alert("Producto alamacenado correctamente"); 
+
             } else {
-                arrayProductos = JSON.parse(localStorage.getItem("Productos"));
                 idProductoMod = id - 1; 
                 arrayProductos[idProductoMod] = {
-                                                id : id,
+                                                id : parseInt(id),
                                                 referencia : referenciaC, 
                                                 descripcion : descripcionC, 
                                                 familia : familiaC, 
+                                                stock : stockC,
                                                 precio : precioC, 
                                                 borrado: false
                 };
+                alert("Producto editado correctamente"); 
             }
-            localStorage.setItem("Productos", JSON.stringify(arrayProductos));
         }
-        limpiarForm();
+        LimpiarForm();
+        ActualizarProductos();
+        window.location.reload();
     }
 }
 
-function recuperarAlmacenamiento(){
-    //Obtenemos la tabla:
-    var tabla = document.getElementById('tablaProductos');
+function RecuperarAlmacenamiento(){
 
     var fila = tabla.getElementsByTagName("tr");
 
@@ -157,55 +202,60 @@ function recuperarAlmacenamiento(){
         tabla.removeChild(fila[i]);
     }
 
-    //Recuperamos el objeto del localstorage: 
-    var productos = JSON.parse(localStorage.getItem("Productos"));
-    if(productos == null){
-        alert("No hay clientes registrados");
+    if(arrayProductos.length == 0){
+        alert("No hay productos de stock");
     } else {         
-        for (var i = 0; i < productos.length; i++) {
-            productosBorrados = productos[i].borrado;
-            if(productosBorrados == "true"){
+        for(item of arrayProductos){
+            if(item.borrado){
                 nuevaFila = document.createElement('tr');
-                nuevaFila.setAttribute('id', productos[i].id)
+                nuevaFila.setAttribute('id', item.id)
                 nuevaFila.setAttribute('class', 'nuevo_Producto');
                 nuevaFila.setAttribute('hidden', 'false');
 
                 //Añadimos la primera celda ID:
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('class', 'idN');
-                contenido = document.createTextNode(productos[i].id);
+                contenido = document.createTextNode(item.id);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
                 
                 //Añadimos la segunda celda REFERENCIA:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'nombre');
-                contenido = document.createTextNode(productos[i].referencia);
+                nuevaCelda.setAttribute('class', 'referencia');
+                contenido = document.createTextNode(item.referencia);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
 
                 //Añadimos la tercera celda DESCRIPCION:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'apellidos');
-                contenido = document.createTextNode(productos[i].descripcion);
+                nuevaCelda.setAttribute('class', 'descripcion');
+                contenido = document.createTextNode(item.descripcion);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
                 
                 //Añadimos la cuarta celda FAMILIA:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'dni');
-                contenido = document.createTextNode(productos[i].familia);
+                nuevaCelda.setAttribute('class', 'familia');
+                contenido = document.createTextNode(item.familia);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
 
-                //Añadimos la quinta celda FECHA PRECIO:
+                //Añadimos la cuarta celda STOCK:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'fechaNac');
-                contenido = document.createTextNode(productos[i].precio);
+                nuevaCelda.setAttribute('class', 'stock');
+                contenido = document.createTextNode(item.stock);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda PRECIO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'precio');
+                contenido = document.createTextNode(item.precio + "€");
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
@@ -214,53 +264,61 @@ function recuperarAlmacenamiento(){
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('class', 'campoBorrado');
                 //nuevaCelda.setAttribute('hidden', 'true');
-                contenido = document.createTextNode(productos[i].borrado);
+                contenido = document.createTextNode(item.borrado);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
 
                 tabla.appendChild(nuevaFila);
-            }else {
+            } else {
                 //Creamos la fila: 
                 nuevaFila = document.createElement('tr');
-                nuevaFila.setAttribute('id', productos[i].id)
+                nuevaFila.setAttribute('id', item.id)
                 nuevaFila.setAttribute('class', 'nuevo_Producto');
 
                 //Añadimos la primera celda ID:
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('class', 'idN');
-                contenido = document.createTextNode(productos[i].id);
+                contenido = document.createTextNode(item.id);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
                 
                 //Añadimos la segunda celda REFERENCIA:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'nombre');
-                contenido = document.createTextNode(productos[i].referencia);
+                nuevaCelda.setAttribute('class', 'referencia');
+                contenido = document.createTextNode(item.referencia);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
 
                 //Añadimos la tercera celda DESCRIPCION:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'apellidos');
-                contenido = document.createTextNode(productos[i].descripcion);
+                nuevaCelda.setAttribute('class', 'descripcion');
+                contenido = document.createTextNode(item.descripcion);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
                 
                 //Añadimos la cuarta celda FAMILIA:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'dni');
-                contenido = document.createTextNode(productos[i].familia);
+                nuevaCelda.setAttribute('class', 'familia');
+                contenido = document.createTextNode(item.familia);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
 
-                //Añadimos la quinta celda FECHA PRECIO:
+                //Añadimos la cuarta celda STOCK:
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'fechaNac');
-                contenido = document.createTextNode(productos[i].precio);
+                nuevaCelda.setAttribute('class', 'stock');
+                contenido = document.createTextNode(item.stock);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tabla.appendChild(nuevaFila);
+
+                //Añadimos la quinta celda PRECIO:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'precio');
+                contenido = document.createTextNode(item.precio + "€");
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
@@ -269,7 +327,7 @@ function recuperarAlmacenamiento(){
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('class', 'campoBorrado');
                 nuevaCelda.setAttribute('hidden', 'false');
-                contenido = document.createTextNode(productos[i].borrado);
+                contenido = document.createTextNode(item.borrado);
                 nuevaCelda.appendChild(contenido);
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
@@ -282,7 +340,7 @@ function recuperarAlmacenamiento(){
                                                         id = this.parentNode.getAttribute("id");
 
                                                         document.getElementById("id").value = id;                                         
-                                                        editarProducto(id);
+                                                        EditarProducto(id);
                                                     });
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
@@ -295,74 +353,43 @@ function recuperarAlmacenamiento(){
                                                         
                                                         id = this.parentNode.getAttribute("id");
 
-                                                        // Selecionamos la tabla de clientes
-                                                        var tabla = document.querySelector('#tablaProductos');
+                                                        arrayProductos[id - 1].borrado = true; 
 
-                                                        // Seleccionamos todas las filas y las guardamos en la variable filas
-                                                        filas = tabla.getElementsByTagName('tr');
+                                                        ActualizarProductos();
 
-                                                        // Seleccionamos todas las celdas de la fila en cada iteración
-                                                        casillas = filas[id].getElementsByTagName("td");
+                                                        alert("Producto eliminado"); 
 
-                                                        // Ponemos en true la casilla de borrado: 
-                                                        casillas[5].innerText = true;
-
-                                                        // Aquí ejecutamos la función borrarCliente que en realidad lo que hace
-                                                        // es recorrer otra vez la tabla y sobreescribir Clientes en Localstorage
-                                                        borrarProducto();
+                                                        location.reload();
                                                     });
                 nuevaFila.appendChild(nuevaCelda);
                 tabla.appendChild(nuevaFila);
             }
-        }    
+        }
     }
-}
+}   
 
-function borrarProducto(){
-    // Creamos un array vacío donde guardaremos todos los clientes de la tabla.
-    var listaProductos = [];
-
-    // Selecionamos la tabla de clientes
-    var tabla = document.querySelector('#tablaProductos');
-
-    // Seleccionamos todas las filas y las guardamos en la variable filas
-    filas = tabla.getElementsByTagName('tr');
-
-    // Recorremos las filas
-    for (var i = 1; i < filas.length; i++) {
-
-        // Seleccionamos todas las celdas de la fila en cada iteración
-        casillas = filas[i].getElementsByTagName("td");
-
-            obj = {        
-                    id:casillas[0].innerText,
-                    referencia:casillas[1].innerText,
-                    descripcion:casillas[2].innerText,
-                    familia:casillas[3].innerText,
-                    precio: casillas[4].innerText, 
-                    borrado: casillas[5].innerText
-                    }; 
-                    
-            // Subimos al array el objeto
-            listaProductos.push(obj);
-    }
-
-    // Una vez tenemos el array de objetos lo pasamos a cadena de texto con stringify
-    productos = JSON.stringify(listaProductos);
-
-    // Y sobreescribimos en localStorage.
-    localStorage.Productos = productos;
-
-    //Redirecciona a la tabla actualizada: 
-    window.location.href = "formularioProductos.html";
-}
-
-function editarProducto(id){
+function EditarProducto(id){
     //Lo primero vamos a coger el form y sus items: 
     //alert(id);
-        document.getElementById("referencia").value = arrayTotal[id-1].referencia;
-        document.getElementById("descripcion").value = arrayTotal[id-1].descripcion;
-        document.getElementById("familia").value = arrayTotal[id-1].familia;
-        document.getElementById("precio").value = arrayTotal[id-1].precio;
+        document.getElementById("referencia").value = arrayProductos[id-1].referencia;
+        document.getElementById("descripcion").value = arrayProductos[id-1].descripcion;
+        document.getElementById("familia").value = arrayProductos[id-1].familia;
+        document.getElementById("stock").value = arrayProductos[id-1].stock;
+        document.getElementById("precio").value = arrayProductos[id-1].precio;
+}
 
+function ActualizarProductos(){
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+            alert("Ha ocurrido un error al actualizar el registro"); 
+
+        } else if(this.readyState == 4 && this.status == 200){ 
+            console.log("Registro de productos actualizado"); 
+        }
+    };
+
+    nuevoArray = JSON.stringify(arrayProductos); 
+    ajax.open("POST", "php/datos_productos.php?param=" + nuevoArray, true); 
+    ajax.send();
+    console.log(arrayProductos);
 }

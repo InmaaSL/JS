@@ -1,11 +1,29 @@
 nav{
-    float: left;
-    width: 10%;
-}
+    width: 100%;
+    text-align: center;
+} 
 
 nav button{
-    display:flex;
-    background-color: crimson;
+    /*display:flex;
+    background-color: crimson;*/
+    text-decoration:none;
+    color:inherit;
+    font-size:14px;
+}
+
+nav li{
+    display:inline-block;
+    width:25%;
+    padding:5px 10px;
+    background-color:#000;
+    border:1px solid #000;
+    text-align:center;
+    color:#fff;
+}
+
+nav li:hover{
+background-color:#fff;
+color:#000;
 }
 
 p, div {

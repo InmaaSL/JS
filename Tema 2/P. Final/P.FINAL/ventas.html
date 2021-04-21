@@ -9,11 +9,14 @@
     <title>Ventas</title>
 </head>
 <body>
-    <nav>
-        <button id="gestionClientes" class="mar_t_10 btn-block" onclick="location.href='formularioClientes.html'">Gestión de clientes</button> 
-        <button id="gestionProductos" class="mar_t_10" btn-block onclick="location.href='formularioProductos.html'">Gestión de productos</button>
-        <button id="logout" class="mar_t_10 btn-block">Logout</button>
+    <nav> 
+        <ul>
+            <li><a id="gestionClientes" class="mar_t_10 btn-block" href='formularioClientes.html'>Gestión de clientes</a> </li>
+            <li><a id="gestionProductos" class="mar_t_10 btn-block" href='formularioProductos.html'>Gestión de productos</a></li>
+            <li><a id="logout" class="mar_t_10 btn-block">Logout</a></li>
+        </ul>
     </nav>
+
     <main>
         <div id="productos">
             
@@ -26,8 +29,10 @@
                     <label for="precio">Precio: </label><input type="text" id="precio" value="" placeholder="000.00" disabled="true"><br>
                     <label for="cantidad">Cantidad: </label><input type="text" id="cantidad" value="" placeholder="unidades">
                 </div>
+                <div>
                     <button id="grabar" class="mar_t_10">Grabar</button> 
                     <button id="cancelar" class="mar_t_10">Cancelar</button>
+                </div>
             </form>
 
             <table id="lineas">

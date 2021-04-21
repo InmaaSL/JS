@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="estilos.css" rel="stylesheet" type="text/css"> -->
+    <link rel="stylesheet" href="style/style.css">
     <script src="script/productos_script.js"></script>
     <title>Nuevo producto: </title>
 </head>
 <body>
+    <nav> 
+        <ul>
+            <li><a id="gestionClientes" class="mar_t_10 btn-block" href='formularioClientes.html'>Gestión de clientes</a> </li>
+            <li><a id="gestionVentas" class="mar_t_10 btn-block" href='ventas.html'>Gestión de ventas</a></li>
+            <li><a id="logout" class="mar_t_10 btn-block">Logout</a></li>
+        </ul>
+    </nav>
+
     <div> 
         <h2> Registro: </h2>
         <form action="" id="productosForm">
@@ -30,6 +38,11 @@
                     <td><label for="familia"> Familia: </label></td>
                     <td><input type="text" name="familia" id="familia"> </td>
                     <td id="errorFamilia"></td>
+                </tr>
+                <tr>
+                    <td><label for="familia"> Stock: </label></td>
+                    <td><input type="text" name="stock" id="stock"> </td>
+                    <td id="errorStock"></td>
                 </tr>
                 <tr>
                     <td><label for="precio"> Precio:  </label></td>
@@ -58,15 +71,16 @@
         <h2>Gestión de productos:</h2>
         <table id="tablaProductos">
             <colgroup>
-                <col><col><col><col><col><col>
+                <col><col><col><col><col><col><col>
             </colgroup>
-            <tbody>
+            <tbody id="tablaProductos_tbody">
                 <th class="ancho0">ID</th>
-                <th class="ancho0">Referencia</th>
-                <th class="ancho1">Descripción</th>
-                <th class="ancho2">Familia</th>
-                <th class="ancho3">Precio</th>
-                <th class="ancho8" style="visibility: hidden">Borrado</th>
+                <th class="ancho1">Referencia</th>
+                <th class="ancho2">Descripción</th>
+                <th class="ancho3">Familia</th>
+                <th class="ancho4">Stock</th>
+                <th class="ancho5">Precio</th>
+                <th class="ancho6" style="visibility: hidden">Borrado</th>
             </tbody> 
         </table>
 

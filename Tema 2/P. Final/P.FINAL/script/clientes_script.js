@@ -17,9 +17,9 @@ window.onload = function(){
     btnBaja = document.getElementById("borrarCliente");
     
     //Funciones en funcionamiento: 
-    btnCancelar.onclick = limpiarForm;
+    btnCancelar.onclick = LimpiarForm;
     btnGuardar.onclick = almacenarClientes;
-    btnGestion.addEventListener("click", recuperarAlmacenamiento);
+    //btnGestion.addEventListener("click", recuperarAlmacenamiento);
 
     //Cargar archivo con datos de clientes: 
     ajax.onreadystatechange = function(){
@@ -30,9 +30,11 @@ window.onload = function(){
             newRow.appendChild(contenido); 
             
         } else if(this.readyState == 4 && this.status == 200){ 
-            
             //Pasar de texto a JSON
 			arrayClientes = JSON.parse(this.responseText);
+            console.log(arrayClientes);
+
+            recuperarAlmacenamiento();
         }
     }; 
 
@@ -219,7 +221,7 @@ function validarCampos(){
     return resultado;
 }
 
-function limpiarForm(){
+function LimpiarForm(){
     //Obtenemos el formulario y lo ponemos en blanco: 
 	form = document.getElementById('clientesForm');
 	form.reset();
@@ -254,6 +256,7 @@ function almacenarClientes(event){
                     };
             arrayClientes.push(newCliente);
             alert("Cliente almacenado correctamente");
+
         } else { 
             var idCliente = arrayClientes[arrayClientes.length - 1]; 
             //console.log("idCliente " + idCliente);
@@ -281,6 +284,8 @@ function almacenarClientes(event){
                                 borrado: false
                 };
                 arrayClientes.push(miObj);
+                alert("Cliente almacenado correctamente");
+                
             } else {
                 //alert("Editamos cliente");
                 //Cuando editamos un cliente: 
@@ -297,17 +302,21 @@ function almacenarClientes(event){
                                                 contrasenya: contrasenyaPC,
                                                 borrado: false
                 };
+                alert("Cliente editado correctamente");
+                
             }
         }
+        
+        //Actualizamos la página:
+        LimpiarForm();
+        ActualizarClientes();
+        window.location.reload();
     }
-    ActualizarClientes();
-
-    //Actualizamos la página:
-    location.reload();
-    //limpiarForm();
 }
 
 function recuperarAlmacenamiento(){
+
+    console.log(arrayClientes);
 
     var fila = tabla.getElementsByTagName("tr");
     //console.log(fila.length);
@@ -533,4 +542,5 @@ function ActualizarClientes(){
     nuevoArray = JSON.stringify(arrayClientes); 
     ajax.open("POST", "php/datos_clientes.php?param=" + nuevoArray, true); 
     ajax.send();
+    console.log(arrayClientes);
 }
