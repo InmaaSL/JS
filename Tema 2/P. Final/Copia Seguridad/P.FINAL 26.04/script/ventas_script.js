@@ -21,33 +21,6 @@ window.onload = function(){
     //Recogemos div productos para rellenarlo con los que tenemos en el arrayProductos: 
     productosDIV = document.getElementById("productos");
 
-    /***************************************
-     * 
-     * Comienza la magia: 
-     * 
-     ***************************************/
-    
-    //Obtenemos los botones grabar y cancelar: 
-    botonGrabar = document.getElementById('grabar');
-    botonCancelar = document.getElementById('cancelar');
-    botonAlmacenar = document.getElementById('almacenar');
-    botonRecuperar = document.getElementById('recuperar');
-    botonEliminar = document.getElementById('eliminar');
-    botonBorrarCarrito = document.getElementById("BorrarCarrito");
-
-
-    //Click: 
-    botonGrabar.onclick = anyadirFila;
-    botonCancelar.onclick = limpiarForm;
-    botonAlmacenar.onclick = realizarCOMPRA;
-    botonEliminar.onclick = eliminarCOMPRA;
-    botonRecuperar.onclick = recuperarCOMPRA;
-    botonBorrarCarrito.onclick = borrarCarrito;
-
-    //Obtenemos datos del formulario: 
-	referencia = document.getElementById("ref");
-    precio = document.getElementById("precio");
-    cantidad = document.getElementById("cantidad");
 }
 
 function obtenerClientes(){
@@ -211,33 +184,12 @@ function RecuperarProductos(){
                     parrafoHijo4.appendChild(simboloEuro);
                     hijoDIV.appendChild(parrafoHijo4);
                     //productosDIV.appendChild(nuevoDIV);
-
-                parrafoHijo5 = document.createElement('p');
-                    parrafoHijo5.setAttribute('hidden', 'true');
-                    codigoFam = document.createTextNode("Cantidad:");
-                    parrafoHijo5.appendChild(codigoFam);
-
-                    spanHijo5 = document.createElement("span");
-                    contenidoStock = document.createTextNode(item.stock);
-                    spanHijo5.appendChild(contenidoStock);
-                    parrafoHijo5.appendChild(spanHijo5);
-                    hijoDIV.appendChild(parrafoHijo5);
-                    //productosDIV.appendChild(nuevoDIV);
                 
                 nuevoDIV.appendChild(hijoDIV);
                 productosDIV.appendChild(nuevoDIV);
             }
         }
     }
-
-    //Obtenemos el valor de los cuadrados con los productos para cuando hagamos doble click:
-    botonesProductos = document.getElementsByClassName("fpeque");
-
-    //Dobleclick:
-    for (let x = 0; x < botonesProductos.length; x++){
-        botonesProductos[x].ondblclick = ponerProducto;
-    }
-
 }
 
 function ponerProducto(){
@@ -246,28 +198,21 @@ function ponerProducto(){
     productoSeleccionado = this.getAttribute('id');
 
     //Obtenemos la ref y precio:
-    precioProductoSelec = this.querySelector('div').querySelectorAll('span')[3].innerText;
+    precio = this.querySelector('div').querySelectorAll('span')[3].innerText;
 
     //Insertamos el precio y la referencia: 
     document.getElementById('ref').value = productoSeleccionado;
-    document.getElementById('precio').value = precioProductoSelec; 
+    document.getElementById('precio').value = precio; 
 
-    //Obtenemos el stock:
-    stockProductoSelec = this.querySelector('div').querySelectorAll('span')[4].innerText;
 }
 
 function validarCampos(){
     cantidad.style.backgroundColor = "#FFF";
-
-    cantidadValor = document.getElementById("cantidad").value;
-
-    let resultado = true;
-
-    // console.log("Cantidad: " + cantidadValor); 
-    // console.log("Cantidad stock: " + stockProductoSelec);
+	
+	let resultado = true;
     
-    //Comprobamos primero que la cantidad sea un número, que sea distinta de 0 y el stock:
-	if( isNaN (cantidad.value) || cantidad.value == 0 || stockProductoSelec < cantidadValor){
+    //Comprobamos primero que la cantidad sea un número y que sea distinta de 0:
+	if( isNaN (cantidad.value) || cantidad.value == 0){
 		cantidad.style.backgroundColor = "rgba(255,155,155,0.4)";
 		cantidad.focus();
 		resultado = false;
@@ -277,7 +222,11 @@ function validarCampos(){
 }
 
 function limpiarForm(){
-    //Dejamos en blanco el formulario: 
+    //Obtenemos el formulario y lo ponemos en blanco: 
+	referencia = document.getElementById("ref");
+    precio = document.getElementById("precio");
+    cantidad = document.getElementById("cantidad");
+
     referencia.value = "";
     precio.value = "";
     cantidad.value = "";

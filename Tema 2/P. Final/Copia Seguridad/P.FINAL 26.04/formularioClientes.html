@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="script/clientes_script.js"></script>
+    <title>Nuevo cliente: </title>
+</head>
+<body>
+    <nav> 
+        <ul>
+            <li><a id="gestionProductos" class="mar_t_10 btn-block" href='formularioProductos.html'>Gestión de productos</a></li>
+            <li><a id="gestionVentas" class="mar_t_10 btn-block" href='ventas.html'>Gestión de ventas</a> </li>
+            <li><a id="logout" class="mar_t_10 btn-block">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div> 
+        <h2> Registro: </h2>
+        <form action="" id="clientesForm">
+            <table>
+                <tr>
+                    <td><label for="id"> ID:</label></td>
+                    <td><input type="text" name="id" id="id" disabled></td>
+                </tr>
+                <tr>
+                    <td><label for="nombre"> Nombre:</label></td>
+                    <td><input type="text" name="nombre" id="nombre"></td>
+                    <td id="errorNombre"></td>
+                </tr>
+                <tr>
+                    <td><label for="apellidos"> Apellidos: </label></td>
+                    <td><input type="text" name="apellidos" id="apellidos"> </td>
+                    <td id="errorApellidos"></td>
+                </tr>
+                <tr>
+                    <td><label for="dni"> DNI:  </label></td>
+                    <td><input type="text" name="dni" id="dni"></td>
+                    <td id="errorDNI"></td>
+                </tr>
+                <tr>
+                    <td><label for="fechaNac">Fecha de nacimiento: </label></td>
+                    <td><input type="date" name="fechaNac" id="fechaNac"></td>
+                    <td id="errorFechaNac"></td>
+                </tr>
+                <tr>
+                    <td><label for="email"> Email:  </label></td>
+                    <td><input type="email" name="email" id="email"></td>
+                    <td id="errorEmail"></td>
+                </tr>
+                <tr>
+                    <td><label for="contrasenya">Contraseña: </label></td>
+                    <td><input type="password" name="contrasenyaP" id="contrasenyaP"></td>
+                    <td id="errorContrasenyaP"></td>
+                </tr>
+                <tr>
+                    <td><label for="contrasenya2">Repita su contraseña: </label></td>
+                    <td><input type="password" name="contrasenyaR" id="contrasenyaR"></td>
+                    <td id="errorContrasenyaR"></td>
+                </tr>
+                <tr style="visibility: hidden">
+                    <td><label for="borrado" >Borrado: </label></td>
+                    <td><input type="text" name="borrado" id="borrado"></td>
+                    <td id="errorContrasenyaR"></td>
+                </tr>
+            </table>
+        </form>
+
+        <div id="buttons">
+            <table>
+                <tr>
+                    <td><input type="button" id="cancelar" value="Cancelar"></td>
+                    <td><input type="button" id="guardar" value="Guardar"></td>
+                    <td><input type="button" id="gestion" value="Gestion de clientes"></td>
+                </tr>
+            </table>
+        </div>
+        
+
+        <h2>Gestión de clientes:</h2>
+        <table id="tablaClientes">
+            <colgroup>
+                <col><col><col><col><col><col><col><col>
+            </colgroup>
+            <tbody id="tablaClientes_tbody">
+                <th class="ancho0">ID</th>
+                <th class="ancho1">Nombre</th>
+                <th class="ancho2">Apellidos</th>
+                <th class="ancho3">DNI</th>
+                <th class="ancho4">Fecha de nacimiento</th>
+                <th class="ancho5">Email</th>
+                <th class="ancho6">Contraseña</th>
+                <th class="ancho8" style="visibility: hidden" >Borrado</th>
+
+            </tbody> 
+        </table>
+
+    </div>
+
+</body>
+</html>
