@@ -252,8 +252,14 @@ function ponerProducto(){
     document.getElementById('ref').value = productoSeleccionado;
     document.getElementById('precio').value = precioProductoSelec; 
 
+    console.log(arrayProductos);
+    
     //Obtenemos el stock:
-    stockProductoSelec = this.querySelector('div').querySelectorAll('span')[4].innerText;
+    //stockProductoSelec = this.querySelector('div').querySelectorAll('span')[4].innerText;
+    stockProductoSelec = arrayProductos[productoSeleccionado - 1].stock; 
+    console.log("Desde el array: " + stockProductoSelec); 
+
+    
 }
 
 function validarCampos(){
@@ -263,6 +269,8 @@ function validarCampos(){
 
     let resultado = true;
 
+    console.log("Desde el validator: " + stockProductoSelec); 
+
     // console.log("Cantidad: " + cantidadValor); 
     // console.log("Cantidad stock: " + stockProductoSelec);
     
@@ -271,6 +279,10 @@ function validarCampos(){
 		cantidad.style.backgroundColor = "rgba(255,155,155,0.4)";
 		cantidad.focus();
 		resultado = false;
+        document.getElementById("errorCantidad").style.display = "inline";
+    } else {
+        document.getElementById("errorCantidad").style.display = "none";
+        resultado = true;
     }
     
 	return resultado;
@@ -315,25 +327,7 @@ function calculaTotal(){
 
 }
 
-function anyadirFila(){
-
-    // var x = document.cookie;
-    // var arrayCookies = x.split('=');
-
-    //     if(arrayCookies[1] == null){
-    //         alert("Queda poco!");
-    //     }
-
-    //     if(arrayCookies[2] == null){
-    //         alert("Se borra la venta");
-    //         borrarCarrito();
-    //     }
-
-    // //Creamos cookie de tiempo: 
-    // document.cookie = "tiempoVenta1=aviso1; max-age=90";
-    // document.cookie = "tiempoVenta2=aviso2; max-age=120";
-
-    
+function anyadirFila(){   
     //Obtenemos la imagen que se crea al hacer dobloclick, ya que si esta no está no se ha seleccionado ningun producto: 
     refHueco = document.getElementById('ref');
 
@@ -428,9 +422,29 @@ function realizarCOMPRA(){
     //Recogemos en una variable los datos importantes:
     total = document.getElementsByClassName('total');
 
-    Compras = [];
+    //Obtenemos los datos necesarios del cliente:
+    dniClienteTb = document.getElementById("dni").value; 
+    console.log(dniClienteTb); 
+
+    for(x = 0; x < arrayClientes.length; x++){
+        dniClienteAr = arrayClientes[x].dni;
+        console.log(dniClienteAr);
+
+        if ( dniClienteAr == dniClienteTb){ 
+            idClienteTb = arrayClientes[x].id;
+            console.log(idClienteTb); 
+        } 
+    }
+
+    idCliente = arrayClientes[idClienteTb-1].id; 
+    dniCliente = arrayClientes[idClienteTb-1].dni; 
+    nombreCliente = arrayClientes[idClienteTb-1].nombre; 
+
+    console.log(idCliente + " " + dniCliente + " " + nombreCliente);
     
-    miObj = {ref, precio, cantidad, total};
+    Ventas = [];
+    
+    miObj = {idVenta, dniCliente, nombreCliente, venta};
 
     //Obtenemos la tabla:
     tabla = document.getElementsByTagName("tbody")[0];
@@ -458,7 +472,7 @@ function realizarCOMPRA(){
                 Compras.push(miObj);
             }
 
-            localStorage.setItem("Compras", JSON.stringify(Compras));
+            localStorage.setItem("Ventas", JSON.stringify(Compras));
 
             alert('Datos almacenados correctamente');
             window.location.href = "ventas.html";
