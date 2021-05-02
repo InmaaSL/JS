@@ -239,8 +239,6 @@ function almacenarClientes(event){
     let emailC = document.getElementById('email').value;
     let contrasenyaPC = document.getElementById('contrasenyaP').value;
 
-    Clientes = []; 
-
     if(resultado){
         if (arrayClientes.length == 0 ){ 
             //Creamos un objeto de tipo cliente: 

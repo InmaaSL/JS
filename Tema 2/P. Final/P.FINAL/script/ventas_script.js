@@ -58,7 +58,7 @@ function obtenerClientes(){
         } else if(this.readyState == 4 && this.status == 200){ 
             //Pasar de texto a JSON
 			arrayClientes = JSON.parse(this.responseText);
-            console.log(arrayClientes);
+            //console.log(arrayClientes);
         }
     }; 
     ajax.open("GET", "php/infoClientes.json", true); 
@@ -422,64 +422,137 @@ function realizarCOMPRA(){
     //Recogemos en una variable los datos importantes:
     total = document.getElementsByClassName('total');
 
-    //Obtenemos los datos necesarios del cliente:
-    dniClienteTb = document.getElementById("dni").value; 
-    console.log(dniClienteTb); 
-
-    for(x = 0; x < arrayClientes.length; x++){
-        dniClienteAr = arrayClientes[x].dni;
-        console.log(dniClienteAr);
-
-        if ( dniClienteAr == dniClienteTb){ 
-            idClienteTb = arrayClientes[x].id;
-            console.log(idClienteTb); 
-        } 
-    }
-
-    idCliente = arrayClientes[idClienteTb-1].id; 
-    dniCliente = arrayClientes[idClienteTb-1].dni; 
-    nombreCliente = arrayClientes[idClienteTb-1].nombre; 
-
-    console.log(idCliente + " " + dniCliente + " " + nombreCliente);
-    
-    Ventas = [];
-    
-    miObj = {idVenta, dniCliente, nombreCliente, venta};
-
     //Obtenemos la tabla:
     tabla = document.getElementsByTagName("tbody")[0];
-    
+
     //Obtenemos cada fila de la tabla que nos interesa: 
     filas = tabla.getElementsByClassName("nuevo_Articulo");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
     articulos = filas.length;
 
-    //Calculamos:
-    //Como no cogemos todas las filas, sino solo las de los artículos creados podemos comenzar en 0.
-    //Obtenemos el valor de la celda que tiene como clase total.  
-    //parseFloat ->  convertir una cadena en un número.
-    if (articulos > 0) {
+    //Obtenemos los datos del cliente: 
+    dniClienteTb = document.getElementById("dni").value; 
 
-        if(articulos > 0){		
-            for (var i = 0; i < articulos; i++) {
-                miObj.dni = filas[i].getElementsByClassName('dniCliente')[0].innerText;
-                miObj.ref = filas[i].getElementsByClassName('ref')[0].innerText;
-                miObj.precio = filas[i].getElementsByClassName('precio')[0].innerText;
-                miObj.cantidad = filas[i].getElementsByClassName('cantidad')[0].innerText;
-                miObj.total = filas[i].getElementsByClassName('total')[0].innerText;
-                
-                Compras.push(miObj);
-            }
+    for(x = 0; x < arrayClientes.length; x++){
+        dniClienteAr = arrayClientes[x].dni;
+        //console.log(dniClienteAr);
 
-            localStorage.setItem("Ventas", JSON.stringify(Compras));
-
-            alert('Datos almacenados correctamente');
-            window.location.href = "ventas.html";
-        }	
-    } else {
-        alert('No hay productos que almacenar');
+        if ( dniClienteAr == dniClienteTb){ 
+            idClienteTb = arrayClientes[x].id;
+            //console.log(idClienteTb); 
+        } 
     }
+
+    idCliente = arrayClientes[idClienteTb-1].id; 
+    dniCliente = arrayClientes[idClienteTb-1].dni; 
+    nombreCliente = arrayClientes[idClienteTb-1].nombre; 
+    
+    carrito = [];
+    articulosVenta = {ref, precio, cantidad, total};
+
+    if(arrayVentas.length == 0){
+
+        if(articulos > 0){
+            //Creamos un idVentas: 
+            var idVentas = 1;
+            newVenta = {"idVentas" : idVentas, 
+                        "idCliente" : idCliente, 
+                        "DNICliente" : dniCliente, 
+                        "nombreCliente" : nombreCliente, 
+                        "carrito" : carrito,
+                        "borrado" : false
+            };
+
+            arrayVentas.push(newVenta);
+
+            if(articulos > 0){		
+                for (var i = 0; i < articulos; i++) {
+                    articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+                            "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
+                            "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
+                            "total" : filas[i].getElementsByClassName('total')[0].innerText, 
+                    };
+                    carrito.push(articulosVenta);
+                }
+                alert("Venta realizada");
+                //alert('Datos almacenados correctamente');
+                //window.location.href = "ventas.html";
+            }	
+
+        } else {
+            alert('No hay productos que almacenar');
+        }
+
+    } else {
+        //Cogemos el idVentas anterior: 
+        var idVentasI = arrayVentas[arrayVentas.length-1];
+
+        //Obtenemos el valor del idVentas: 
+        var id_JSON = idVentasI.idVentas;
+
+        //Obtenemos el campo IDVentas del form: 
+        var idVentaF = document.getElementById("IDVenta").value;
+
+        //Cuando creemos la siguiente venta: 
+        if(idVentaF == null || idVentaF == ""){
+            if(articulos > 0){
+                newVenta = {"idVentas" : id_JSON + 1, 
+                            "idCliente" : idCliente, 
+                            "DNICliente" : dniCliente, 
+                            "nombreCliente" : nombreCliente, 
+                            "carrito" : carrito,
+                            "borrado" : false
+                };
+                arrayVentas.push(newVenta);
+    
+                if(articulos > 0){		
+                    for (var i = 0; i < articulos; i++) {
+                        articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+                                "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
+                                "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
+                                "total" : filas[i].getElementsByClassName('total')[0].innerText, 
+                        };
+                        carrito.push(articulosVenta);
+                    }
+                    alert("Venta realizada");
+                    //alert('Datos almacenados correctamente');
+                    //window.location.href = "ventas.html";
+                }	
+    
+            } else {
+                alert('No hay productos que almacenar');
+            }
+        } else {
+            //Cuando editamos una venta: 
+            idVentaMod = idVentaF - 1; 
+
+            arrayVentas[idVentaMod] = {
+                "idVentas" : idVentasF, 
+                "idCliente" : idCliente, 
+                "DNICliente" : dniCliente, 
+                "nombreCliente" : nombreCliente, 
+                "carrito" : carrito,
+                "borrado" : false
+    };
+    arrayVentas.push(newVenta);
+
+    if(articulos > 0){		
+        for (var i = 0; i < articulos; i++) {
+            articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+                    "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
+                    "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
+                    "total" : filas[i].getElementsByClassName('total')[0].innerText, 
+            };
+            carrito.push(articulosVenta);
+        }
+        alert("Venta realizada");
+            }
+        }
+
+    }
+    console.log(arrayVentas);
+
 }
 
 function eliminarCOMPRA(){
