@@ -1,6 +1,9 @@
 
+    //Para arrayClientes: 
     const ajax = new XMLHttpRequest(); 
+    //Para arayProductos:
     const ajax2 = new XMLHttpRequest();
+    //Para arrayVentas: 
     const ajax3 = new XMLHttpRequest();
 
 window.onload = function(){
@@ -12,11 +15,7 @@ window.onload = function(){
     //Cargamos esos arrays con la información que tenemos guardada en los archivos JSON:
     obtenerClientes();
     obtenerProductos();
-    //obtenerVentas();
-
-    // console.log("arrayclientes: " + arrayClientes);
-    // console.log("arrayproductos: " + arrayProductos);
-    // console.log("arrayventas: " + arrayVentas);
+    obtenerVentas();
 
     //Recogemos div productos para rellenarlo con los que tenemos en el arrayProductos: 
     productosDIV = document.getElementById("productos");
@@ -35,19 +34,24 @@ window.onload = function(){
     botonEliminar = document.getElementById('eliminar');
     botonBorrarCarrito = document.getElementById("BorrarCarrito");
 
-
     //Click: 
     botonGrabar.onclick = anyadirFila;
-    botonCancelar.onclick = limpiarForm;
+    botonCancelar.onclick = LimpiarForm;
     botonAlmacenar.onclick = realizarCOMPRA;
     botonEliminar.onclick = eliminarCOMPRA;
     botonRecuperar.onclick = recuperarCOMPRA;
-    botonBorrarCarrito.onclick = borrarCarrito;
+    botonBorrarCarrito.onclick = BorrarCarrito;
 
     //Obtenemos datos del formulario: 
 	referencia = document.getElementById("ref");
     precio = document.getElementById("precio");
     cantidad = document.getElementById("cantidad");
+
+    //Obtenemos la tabla de Facturas: 
+    tabla = document.getElementsByTagName("tbody")[0];
+
+    //Obtenemos cada fila de la tabla que nos interesa: 
+    filas = tabla.getElementsByClassName("nuevo_Articulo");
 }
 
 function obtenerClientes(){
@@ -288,7 +292,7 @@ function validarCampos(){
 	return resultado;
 }
 
-function limpiarForm(){
+function LimpiarForm(){
     //Dejamos en blanco el formulario: 
     referencia.value = "";
     precio.value = "";
@@ -301,10 +305,10 @@ function calculaTotal(){
 	let	totalPedido = 0;
 
     //Obtenemos la tabla:
-    tabla = document.getElementsByTagName("tbody")[0];
+    //tabla = document.getElementsByTagName("tbody")[0];
     
-    //Obtenemos cada fila de la tabla que nos interesa: 
-    filas = tabla.getElementsByClassName("nuevo_Articulo");
+    // //Obtenemos cada fila de la tabla que nos interesa: 
+    // filas = tabla.getElementsByClassName("nuevo_Articulo");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
     articulos = filas.length;
@@ -404,7 +408,7 @@ function anyadirFila(){
             //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
             nuevaCeldaBOT.addEventListener("click", borraFila);
 
-            limpiarForm();
+            LimpiarForm();
         }
     } else {
         alert("No has seleccionado producto");	
@@ -423,10 +427,10 @@ function realizarCOMPRA(){
     total = document.getElementsByClassName('total');
 
     //Obtenemos la tabla:
-    tabla = document.getElementsByTagName("tbody")[0];
+   // tabla = document.getElementsByTagName("tbody")[0];
 
     //Obtenemos cada fila de la tabla que nos interesa: 
-    filas = tabla.getElementsByClassName("nuevo_Articulo");
+    //filas = tabla.getElementsByClassName("nuevo_Articulo");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
     articulos = filas.length;
@@ -494,8 +498,8 @@ function realizarCOMPRA(){
         //Obtenemos el campo IDVentas del form: 
         var idVentaF = document.getElementById("IDVenta").value;
 
-        //Cuando creemos la siguiente venta: 
         if(idVentaF == null || idVentaF == ""){
+            //Cuando creemos la siguiente venta: 
             if(articulos > 0){
                 newVenta = {"idVentas" : id_JSON + 1, 
                             "idCliente" : idCliente, 
@@ -549,10 +553,20 @@ function realizarCOMPRA(){
         alert("Venta realizada");
             }
         }
-
     }
-    console.log(arrayVentas);
+    //console.log(arrayVentas);
+    LimpiarForm();
+    BorrarCarrito();
+    ActualizarVentas();
+}
 
+function BorrarCarrito(){
+
+    for(var x = filas.length - 1; x> 0; x-- ){
+        tabla.removeChild(filas[x]);
+    }
+
+    LimpiarForm();
 }
 
 function eliminarCOMPRA(){
@@ -576,10 +590,10 @@ function recuperarCOMPRA(){
     arrayItems = JSON.parse(localStorage.getItem("Compras"));
 
     //Obtenemos la tabla:
-    tabla = document.getElementsByTagName("tbody")[0];
+    //tabla = document.getElementsByTagName("tbody")[0];
     
     //Obtenemos cada fila de la tabla que nos interesa: 
-    filas = tabla.getElementsByClassName("nuevo_Articulo");
+    //filas = tabla.getElementsByClassName("nuevo_Articulo");
     
     //Nos quedamos solo con los artículos y no con la "fila enunciado":
     articulos = filas.length;
@@ -662,18 +676,21 @@ function recuperarCOMPRA(){
     }
 }
 
-function borrarCarrito(){
+function recuperarCOMPRAS(){
 
-    tabla = document.getElementsByTagName("tbody")[0];
-    
-    //Obtenemos cada fila de la tabla que nos interesa: 
-    filas = tabla.getElementsByClassName("nuevo_Articulo");
-    for (let i = 0; i < filas.length; i++) {
-        filas[i].remove();
-    }
-    limpiarForm();
 }
 
-function recuperarCOMPRAS(){
+function ActualizarVentas(){
+    ajax3.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404){
+            alert("Ha ocurrido un error al actualizar los datos"); 
+        } else if (this.readyState == 4 && this.status == 200){
+            console.log("Registro de ventas actualizado"); 
+        }
+    }; 
+
+    nuevoArray = JSON.stringify(arrayVentas); 
+    ajax3.open("POST", "php/datos_ventas.php?param=" + nuevoArray, true); 
+    ajax3.send();
 
 }
