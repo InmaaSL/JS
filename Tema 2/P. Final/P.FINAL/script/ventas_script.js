@@ -299,7 +299,7 @@ function LimpiarForm(){
     cantidad.value = "";
 }
 
-function calculaTotal(){
+function CalculaTotal(){
 
     //Declaramos una variable en 0:
 	let	totalPedido = 0;
@@ -413,12 +413,12 @@ function anyadirFila(){
     } else {
         alert("No has seleccionado producto");	
     }	
-    calculaTotal();	
+    CalculaTotal();	
 }
 
 function borraFila(){
     this.parentNode.remove();
-	calculaTotal();
+	CalculaTotal();
 }
 
 function realizarCOMPRA(){
@@ -562,10 +562,11 @@ function realizarCOMPRA(){
 
 function BorrarCarrito(){
 
-    for(var x = filas.length - 1; x> 0; x-- ){
-        tabla.removeChild(filas[x]);
+    for (let i = filas.length-1; i >= 0; i-- ){
+        filas[i].remove();
     }
 
+    CalculaTotal();
     LimpiarForm();
 }
 
@@ -666,7 +667,7 @@ function recuperarCOMPRA(){
                 //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
                 nuevaCeldaBOT.addEventListener("click",borraFila);
             } 
-            calculaTotal();
+            CalculaTotal();
         }else {
             alert('Almacenamiento recuperado');
         }
