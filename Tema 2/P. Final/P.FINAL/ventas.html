@@ -64,7 +64,6 @@
             </div>
 
             <div>
-                <button id="recuperar" class="mar_t_10">Recuperar COMPRA</button> 
                 <button id="almacenar" class="mar_t_10">REALIZAR COMPRA</button>   
                 <button id="eliminar" class="mar_t_10">Eliminar COMPRA</button> 
             </div>
@@ -72,19 +71,22 @@
         </div>
         <div id="ventas">
             <h2>Gestión de ventas:</h2>
-            <table id="lineas2">
+            <table id="gestionVentas">
                 <colgroup>
                     <col><col><col><col><col><col>
                 </colgroup>
 
-                <tbody>
+                <tbody id="listaVentas_tbody">
                     <tr>
-                        <th class="ancho2">DNI.</th>
+                        <th class="ancho0">ID Venta</th>
+                        <!-- <th class="ancho1">ID Cliente</th> -->
+                        <!-- <th class="ancho2">DNI Cliente</th> -->
+                        <th class="ancho2">NOMBRE Cliente</th>
+                        <th class="ancho2">Carrito</th>
                     </tr>
                 </tbody>
             
             </table>
-        </table>
         </div>
     </main>
 </body>

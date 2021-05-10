@@ -39,7 +39,6 @@ window.onload = function(){
     botonCancelar.onclick = LimpiarForm;
     botonAlmacenar.onclick = realizarCOMPRA;
     botonEliminar.onclick = eliminarCOMPRA;
-    botonRecuperar.onclick = recuperarCOMPRA;
     botonBorrarCarrito.onclick = BorrarCarrito;
 
     //Obtenemos datos del formulario: 
@@ -537,7 +536,7 @@ function realizarCOMPRA(){
             idVentaMod = idVentaF - 1; 
 
             arrayVentas[idVentaMod] = {
-                "idVentas" : idVentasF, 
+                "idVentas" : idVentaF, 
                 "idCliente" : idCliente, 
                 "DNICliente" : dniCliente, 
                 "nombreCliente" : nombreCliente, 
@@ -545,7 +544,7 @@ function realizarCOMPRA(){
                 "carrito" : carrito,
                 "borrado" : false
     };
-    arrayVentas.push(newVenta);
+    //arrayVentas.push(newVenta);
 
     if(articulos > 0){		
         for (var i = 0; i < articulos; i++) {
@@ -561,9 +560,10 @@ function realizarCOMPRA(){
         }
     }
     //console.log(arrayVentas);
+    ActualizarVentas();
     LimpiarForm();
     BorrarCarrito();
-    ActualizarVentas();
+    ListadoCompras();
 }
 
 function BorrarCarrito(){
@@ -586,6 +586,8 @@ function ListadoCompras(){
         alert("No hay ventas registradas");
     } else {
         for ( item of arrayVentas){
+            console.log(item);
+
             if(item.borrado){
                 nuevaFila = document.createElement('tr');
                 nuevaFila.setAttribute('id', item.idVentas)
@@ -765,7 +767,7 @@ function ListadoCompras(){
                 nuevaCelda.innerHTML = '<button id="Editar">Editar</button>';
                 nuevaCelda.addEventListener("click", function(){
                                                         id = this.parentNode.getAttribute("id");
-                                                        console.log("id " + id); 
+                                                        //console.log("id " + id); 
 
                                                         document.getElementById("IDVenta").value = id;                                         
                                                         editarCompra(id);
@@ -781,10 +783,10 @@ function ListadoCompras(){
                                                         
                                                         id = this.parentNode.getAttribute("IDVenta");
 
-                                                        console.log(arrayVentas[id-1].id); 
+                                                        //console.log(arrayVentas[id-1].id); 
 
                                                         arrayVentas[id-1].borrado = true; 
-                                                        console.log(arrayVentas[id-1].borrado);
+                                                        //console.log(arrayVentas[id-1].borrado);
 
                                                         ActualizarVentas();
 
@@ -816,101 +818,6 @@ function eliminarCOMPRA(){
     }
 }
 
-function recuperarCOMPRA(){
-    //Obtenemos primero la cantidad de elementos guardados en el storage:
-    arrayItems = JSON.parse(localStorage.getItem("Compras"));
-
-    //Obtenemos la tabla:
-    //tabla = document.getElementsByTagName("tbody")[0];
-    
-    //Obtenemos cada fila de la tabla que nos interesa: 
-    //filas = tabla.getElementsByClassName("nuevo_Articulo");
-    
-    //Nos quedamos solo con los artículos y no con la "fila enunciado":
-    articulos = filas.length;
-
-    if(arrayItems != null){
-        if(articulos == 0){
-            //Recogemos en un objeto la información que haya en el localStorage pasandolo a string con parse:
-            miObj = JSON.parse(localStorage.getItem('Compras'));
-            for (var i = 0; i < arrayItems.length; i++) {	
-
-                //Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
-                tbody = document.getElementsByTagName('tbody')[0];
-        
-                //Creamos la fila: 
-                nuevaFila = document.createElement('tr');
-                nuevaFila.setAttribute('class', 'nuevo_Articulo');
-                
-                //Añadimos la segunda celda REFERNCIA:
-                nuevaCeldaREF = document.createElement('td');
-                nuevaCeldaREF.setAttribute('class', 'dniCliente');
-                contenidoREF = document.createTextNode(miObj[i].dni);
-                nuevaCeldaREF.appendChild(contenidoREF);
-                nuevaFila.appendChild(nuevaCeldaREF);
-                tbody.appendChild(nuevaFila);
-
-                //Añadimos la segunda celda REFERNCIA:
-                nuevaCeldaREF = document.createElement('td');
-                nuevaCeldaREF.setAttribute('class', 'ref');
-                contenidoREF = document.createTextNode(miObj[i].ref);
-                nuevaCeldaREF.appendChild(contenidoREF);
-                nuevaFila.appendChild(nuevaCeldaREF);
-                tbody.appendChild(nuevaFila);
-
-                
-                //Añadimos la tercera celda PRECIO:
-                nuevaCeldaPRE = document.createElement('td');
-                nuevaCeldaPRE.setAttribute('class', 'precio');
-                contenidoPRE = document.createTextNode(miObj[i].precio);
-                nuevaCeldaPRE.appendChild(contenidoPRE);
-                nuevaFila.appendChild(nuevaCeldaPRE);
-                tbody.appendChild(nuevaFila);
-
-    
-                //Añadimos la cuarta celda CANTIDAD:
-                nuevaCeldaCAN = document.createElement('td');
-                nuevaCeldaCAN.setAttribute('class', 'cantidad');
-                contenidoCAN = document.createTextNode(miObj[i].cantidad);
-                nuevaCeldaCAN.appendChild(contenidoCAN);
-                nuevaFila.appendChild(nuevaCeldaCAN);
-                tbody.appendChild(nuevaFila);
-
-    
-                //Añadimos la quinta celda TOTAL:
-                nuevaCeldaTOT = document.createElement('td');
-                nuevaCeldaTOT.setAttribute('class', 'total');
-                contenidoTOT = document.createTextNode(miObj[i].total);
-                nuevaCeldaTOT.appendChild(contenidoTOT);
-                nuevaFila.appendChild(nuevaCeldaTOT);
-                tbody.appendChild(nuevaFila);
-
-    
-                //Añadimos la cuarta celda BOTON:
-                nuevaCeldaBOT = document.createElement('td');
-                nuevaCeldaBOT.setAttribute('class', 'celda');
-                nuevaCeldaBOT.innerHTML = '<button class="boton">Borrar</button>';
-                nuevaFila.appendChild(nuevaCeldaBOT);
-                tbody.appendChild(nuevaFila);
-
-    
-                //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
-                nuevaCeldaBOT.addEventListener("click",borraFila);
-            } 
-            CalculaTotal();
-        }else {
-            alert('Almacenamiento recuperado');
-        }
-
-    } else {
-        alert('No hay informacion en el Storage')
-    }
-}
-
-function recuperarCOMPRAS(){
-
-}
-
 function ActualizarVentas(){
     ajax3.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 404){
@@ -927,10 +834,12 @@ function ActualizarVentas(){
 }
 
 function editarCompra(id){
-    document.getElementById("dni").value = arrayVentas[id-1].DNICliente;
+    BorrarCarrito();
 
-    for( item of arrayVentas){
-        for (item2 of item.carrito){
+    document.getElementById("dni").value = arrayVentas[id-1].DNICliente;
+    arrayEspecial = arrayVentas[id-1].carrito; 
+
+        for (item2 of arrayEspecial){
             			//Para ir añanadiendo filas primero cogemos la referencia de donde las queremos insertar:  
                         tbody = document.getElementsByTagName('tbody')[0];
             
@@ -988,6 +897,5 @@ function editarCompra(id){
             
                         //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
                         nuevaCeldaBOT.addEventListener("click", borraFila);
-        }
     }
 }
