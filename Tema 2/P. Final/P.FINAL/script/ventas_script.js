@@ -536,7 +536,7 @@ function realizarCOMPRA(){
             idVentaMod = idVentaF - 1; 
 
             arrayVentas[idVentaMod] = {
-                "idVentas" : idVentaF, 
+                "idVentas" :  parseInt(idVentaF), 
                 "idCliente" : idCliente, 
                 "DNICliente" : dniCliente, 
                 "nombreCliente" : nombreCliente, 
