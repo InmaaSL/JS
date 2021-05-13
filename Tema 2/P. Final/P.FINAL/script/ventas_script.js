@@ -264,12 +264,12 @@ function ponerProducto(){
     document.getElementById('ref').value = productoSeleccionado;
     document.getElementById('precio').value = precioProductoSelec; 
 
-    console.log(arrayProductos);
+    //console.log(arrayProductos);
     
     //Obtenemos el stock:
     //stockProductoSelec = this.querySelector('div').querySelectorAll('span')[4].innerText;
     stockProductoSelec = arrayProductos[productoSeleccionado - 1].stock; 
-    console.log("Desde el array: " + stockProductoSelec); 
+    console.log("Desde el array stock: " + stockProductoSelec); 
 
     
 }
@@ -281,7 +281,7 @@ function validarCampos(){
 
     let resultado = true;
 
-    console.log("Desde el validator: " + stockProductoSelec); 
+    //console.log("Desde el validator: " + stockProductoSelec); 
 
     // console.log("Cantidad: " + cantidadValor); 
     // console.log("Cantidad stock: " + stockProductoSelec);
@@ -349,6 +349,12 @@ function anyadirFila(){
     referencia = document.getElementById("ref");
     precio = document.getElementById("precio");
     cantidad = document.getElementById("cantidad");
+
+    //Control de stock:
+    cantidadRestante = stockProductoSelec - cantidad.value;
+    arrayProductos[productoSeleccionado - 1].stock = cantidadRestante;
+    // console.log(cantidadRestante);
+    // console.log(arrayProductos[productoSeleccionado - 1].stock);
 
     //Obtenemos el resultado de validar: 
 	resultado = validarCampos();
