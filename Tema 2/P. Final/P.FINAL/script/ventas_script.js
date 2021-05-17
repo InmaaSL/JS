@@ -355,6 +355,7 @@ function anyadirFila(){
     arrayProductos[productoSeleccionado - 1].stock = cantidadRestante;
     // console.log(cantidadRestante);
     // console.log(arrayProductos[productoSeleccionado - 1].stock);
+    console.log(arrayProductos);
 
     //Obtenemos el resultado de validar: 
 	resultado = validarCampos();
@@ -428,11 +429,30 @@ function anyadirFila(){
         alert("No has seleccionado producto");	
     }	
     CalculaTotal();	
+    ActualizarProductos();
 }
 
 function borraFila(){
     this.parentNode.remove();
 	CalculaTotal();
+    
+    //Recuperar el stock: 
+    productoSelecBorrar = this.parentNode.getElementsByClassName("ref")[0].innerText;
+    console.log(productoSelecBorrar);
+
+    cantidadSumar = this.parentNode.getElementsByClassName("cantidad")[0].innerText;
+    console.log(cantidadSumar);
+
+    stockProductoSelecBorrar = arrayProductos[productoSelecBorrar - 1].stock;
+    console.log(stockProductoSelecBorrar);
+
+    cantidadSuma = parseInt(stockProductoSelecBorrar) + parseInt(cantidadSumar);
+    console.log(cantidadSuma);
+
+    arrayProductos[productoSelecBorrar - 1].stock = cantidadSuma;
+    console.log(arrayProductos[productoSelecBorrar - 1].stock);
+
+    ActualizarProductos();
 }
 
 function realizarCOMPRA(){
@@ -824,21 +844,6 @@ function eliminarCOMPRA(){
     }
 }
 
-function ActualizarVentas(){
-    ajax3.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 404){
-            alert("Ha ocurrido un error al actualizar los datos"); 
-        } else if (this.readyState == 4 && this.status == 200){
-            console.log("Registro de ventas actualizado"); 
-        }
-    }; 
-
-    nuevoArray = JSON.stringify(arrayVentas); 
-    ajax3.open("POST", "php/datos_ventas.php?param=" + nuevoArray, true); 
-    ajax3.send();
-
-}
-
 function editarCompra(id){
     BorrarCarrito();
 
@@ -904,4 +909,35 @@ function editarCompra(id){
                         //Al ser un botón que creamos de forma instantánea, lo mejor es poner un evento: 
                         nuevaCeldaBOT.addEventListener("click", borraFila);
     }
+}
+
+function ActualizarVentas(){
+    ajax3.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404){
+            alert("Ha ocurrido un error al actualizar los datos"); 
+        } else if (this.readyState == 4 && this.status == 200){
+            console.log("Registro de ventas actualizado"); 
+        }
+    }; 
+
+    nuevoArray = JSON.stringify(arrayVentas); 
+    ajax3.open("POST", "php/datos_ventas.php?param=" + nuevoArray, true); 
+    ajax3.send();
+
+}
+
+function ActualizarProductos(){
+    ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 404) {
+            alert("Ha ocurrido un error al actualizar el registro"); 
+
+        } else if(this.readyState == 4 && this.status == 200){ 
+            console.log("Registro de productos actualizado"); 
+        }
+    };
+
+    nuevoArray = JSON.stringify(arrayProductos); 
+    ajax.open("POST", "php/datos_productos.php?param=" + nuevoArray, true); 
+    ajax.send();
+    console.log(arrayProductos);
 }
