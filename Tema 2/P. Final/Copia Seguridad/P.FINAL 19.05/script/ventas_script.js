@@ -282,6 +282,11 @@ function validarCampos(){
     cantidadValor = document.getElementById("cantidad").value;
 
     let resultado = true;
+
+    //console.log("Desde el validator: " + stockProductoSelec); 
+
+    // console.log("Cantidad: " + cantidadValor); 
+    // console.log("Cantidad stock: " + stockProductoSelec);
     
     //Comprobamos primero que la cantidad sea un número, que sea distinta de 0 y el stock:
 	if( isNaN (cantidad.value) || cantidad.value == 0 || stockProductoSelec < cantidadValor){
@@ -290,10 +295,6 @@ function validarCampos(){
 		resultado = false;
         document.getElementById("errorCantidad").style.display = "inline";
     } else {
-        //Control de stock:
-        cantidadRestante = stockProductoSelec - cantidad.value;
-        arrayProductos[productoSeleccionadoID - 1].stock = cantidadRestante;
-
         document.getElementById("errorCantidad").style.display = "none";
         resultado = true;
     }
@@ -352,6 +353,9 @@ function anyadirFila(){
     precio = document.getElementById("precio");
     cantidad = document.getElementById("cantidad");
 
+    //Control de stock:
+    cantidadRestante = stockProductoSelec - cantidad.value;
+    arrayProductos[productoSeleccionadoID - 1].stock = cantidadRestante;
     // console.log(cantidadRestante);
     // console.log(arrayProductos[productoSeleccionadoID - 1].stock);
     //console.log(arrayProductos);
