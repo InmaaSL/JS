@@ -255,21 +255,23 @@ function RecuperarProductos(){
 function ponerProducto(){
 
     //Seleccionamos el nombre de los productos a través del id: 
-    productoSeleccionado = this.getAttribute('id');
+    productoSeleccionadoID = this.getAttribute('id');
+
+    idProducto = arrayProductos[productoSeleccionadoID - 1].id;
+    refProducto = arrayProductos[productoSeleccionadoID - 1].referencia;
+    descripcionProducto = arrayProductos[productoSeleccionadoID - 1].descripcion;
 
     //Obtenemos la ref y precio:
     precioProductoSelec = this.querySelector('div').querySelectorAll('span')[3].innerText;
 
-    //Insertamos el precio y la referencia: 
-    document.getElementById('ref').value = productoSeleccionado;
+    //Insertamos el precio, la referencia y el id: 
+    document.getElementById('id').value = idProducto;
+    document.getElementById('ref').value = refProducto + " - " + descripcionProducto;
     document.getElementById('precio').value = precioProductoSelec; 
-
-    //console.log(arrayProductos);
     
     //Obtenemos el stock:
-    //stockProductoSelec = this.querySelector('div').querySelectorAll('span')[4].innerText;
-    stockProductoSelec = arrayProductos[productoSeleccionado - 1].stock; 
-    console.log("Desde el array stock: " + stockProductoSelec); 
+    stockProductoSelec = arrayProductos[productoSeleccionadoID - 1].stock; 
+    //console.log("Desde el array stock: " + stockProductoSelec); 
 
     
 }
@@ -346,15 +348,16 @@ function anyadirFila(){
     //Cogemos primero las variables importantes para el proceso: 
     form = document.getElementById('miform');
     dni = document.getElementById("dni");
+    idP = document.getElementById("id");
     referencia = document.getElementById("ref");
     precio = document.getElementById("precio");
     cantidad = document.getElementById("cantidad");
 
     //Control de stock:
     cantidadRestante = stockProductoSelec - cantidad.value;
-    arrayProductos[productoSeleccionado - 1].stock = cantidadRestante;
+    arrayProductos[productoSeleccionadoID - 1].stock = cantidadRestante;
     // console.log(cantidadRestante);
-    // console.log(arrayProductos[productoSeleccionado - 1].stock);
+    // console.log(arrayProductos[productoSeleccionadoID - 1].stock);
     console.log(arrayProductos);
 
     //Obtenemos el resultado de validar: 
@@ -378,6 +381,15 @@ function anyadirFila(){
             contenidoREF = document.createTextNode(dni.value);
             nuevaCeldaREF.appendChild(contenidoREF);
             nuevaFila.appendChild(nuevaCeldaREF);
+            tbody.appendChild(nuevaFila);
+
+            //Añadimos la primera celda ID:
+            nuevaCeldaID = document.createElement('td');
+            nuevaCeldaID.setAttribute('class', 'id');
+            nuevaCeldaID.setAttribute('hidden', 'true');           
+            contenidoID = document.createTextNode(id.value);
+            nuevaCeldaID.appendChild(contenidoID);
+            nuevaFila.appendChild(nuevaCeldaID);
             tbody.appendChild(nuevaFila);
 
             //Añadimos la primera celda REFERNCIA:
@@ -430,6 +442,7 @@ function anyadirFila(){
     }	
     CalculaTotal();	
     ActualizarProductos();
+    console.log(arrayProductos);
 }
 
 function borraFila(){
@@ -437,22 +450,25 @@ function borraFila(){
 	CalculaTotal();
     
     //Recuperar el stock: 
-    productoSelecBorrar = this.parentNode.getElementsByClassName("ref")[0].innerText;
-    console.log(productoSelecBorrar);
+    productoSelecBorrar = this.parentNode.getElementsByClassName("id")[0].innerText;
+    //console.log( "productoSelecBorrar " + productoSelecBorrar);
 
     cantidadSumar = this.parentNode.getElementsByClassName("cantidad")[0].innerText;
-    console.log(cantidadSumar);
+    //console.log(" cantidadSumar " + cantidadSumar);
 
     stockProductoSelecBorrar = arrayProductos[productoSelecBorrar - 1].stock;
-    console.log(stockProductoSelecBorrar);
+    //console.log("stockProductoSelecBorrar " + stockProductoSelecBorrar);
 
     cantidadSuma = parseInt(stockProductoSelecBorrar) + parseInt(cantidadSumar);
-    console.log(cantidadSuma);
+    //console.log("cantidadSuma " + cantidadSuma);
 
     arrayProductos[productoSelecBorrar - 1].stock = cantidadSuma;
-    console.log(arrayProductos[productoSelecBorrar - 1].stock);
+    //console.log(arrayProductos[productoSelecBorrar - 1].stock);
 
     ActualizarProductos();
+
+    stockProductoSelecBorrar = arrayProductos[productoSelecBorrar - 1].stock;
+    //console.log( "productoSelecBorrar " + productoSelecBorrar);
 }
 
 function realizarCOMPRA(){
@@ -594,12 +610,36 @@ function realizarCOMPRA(){
 
 function BorrarCarrito(){
 
+    // for (let i = filas.length-1; i >= 0; i-- ){
+    //     filas[i].remove();
+    // }
+    // CalculaTotal();
+    // LimpiarForm();
+
     for (let i = filas.length-1; i >= 0; i-- ){
-        filas[i].remove();
+        //Recuperamos el id: 
+        productoSelecBorrar = filas[i].getElementsByClassName("id")[0].innerText;
+        console.log( "productoSelecBorrar " + productoSelecBorrar);
+
+        cantidadSumar = filas[i].getElementsByClassName("cantidad")[0].innerText;
+        console.log(" cantidadSumar " + cantidadSumar);
+
+        stockProductoSelecBorrar = arrayProductos[productoSelecBorrar - 1].stock;
+        console.log("stockProductoSelecBorrar " + stockProductoSelecBorrar);
+
+        cantidadSuma = parseInt(stockProductoSelecBorrar) + parseInt(cantidadSumar);
+        console.log("cantidadSuma " + cantidadSuma);
+
+        arrayProductos[productoSelecBorrar - 1].stock = cantidadSuma;
+        console.log(arrayProductos[productoSelecBorrar - 1].stock);
+
+        ActualizarProductos();
+
     }
 
-    CalculaTotal();
-    LimpiarForm();
+    // this.parentNode.remove();
+	// CalculaTotal();
+
 }
 
 function ListadoCompras(){
