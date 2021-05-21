@@ -33,6 +33,9 @@ window.onload = function(){
     botonRecuperar = document.getElementById('recuperar');
     botonEliminar = document.getElementById('eliminar');
     botonBorrarCarrito = document.getElementById("BorrarCarrito");
+    botonCancelarCompra = document.getElementById("CancelarCompra"); 
+    botonVer = document.getElementById("ver"); 
+    botonOcultar = document.getElementById("ocultar");
 
     //Click: 
     botonGrabar.onclick = anyadirFila;
@@ -40,8 +43,12 @@ window.onload = function(){
     botonAlmacenar.onclick = realizarCOMPRA;
     botonEliminar.onclick = eliminarCOMPRA;
     botonBorrarCarrito.onclick = BorrarCarrito;
+    botonCancelarCompra.onclick = CancelarCompra;
+    botonVer.onclick = ListadoCompras;
 
     //Obtenemos datos del formulario: 
+    dni = document.getElementById("dni");
+    nombre = document.getElementById("nombre");
 	referencia = document.getElementById("ref");
     precio = document.getElementById("precio");
     cantidad = document.getElementById("cantidad");
@@ -67,6 +74,7 @@ function obtenerClientes(){
         } else if(this.readyState == 4 && this.status == 200){ 
             //Pasar de texto a JSON
 			arrayClientes = JSON.parse(this.responseText);
+            RecuperarDNIClientes();
             //console.log(arrayClientes);
         }
     }; 
@@ -99,7 +107,7 @@ function obtenerVentas(){
                 arrayVentas = JSON.parse(this.responseText);
 
                 //Cargamos las ventas realizadas: 
-                ListadoCompras();
+                //ListadoCompras();
             }
         }; 
     
@@ -252,6 +260,44 @@ function RecuperarProductos(){
 
 }
 
+function RecuperarDNIClientes(){
+
+    var DNIFactura = document.getElementById("dni");
+
+    if(arrayClientes.length == 0){ 
+        alert("No hay clientes registrados, acuda a la sección pertienente");
+    } else {
+        for(item of arrayClientes){
+            if(!item.borrado){
+                let optionTag = document.createElement("option"); 
+                optionTag.setAttribute("value", item.dni);
+                let contenido = document.createTextNode(item.dni);
+                optionTag.appendChild(contenido); 
+                DNIFactura.appendChild(optionTag);
+            }
+        }
+    }
+}
+
+function RecuperarNombreCliente(){
+    campoNombre = document.getElementById("nombre");
+
+    for(x = 0; x < arrayClientes.length; x++){
+        dniClienteAr = arrayClientes[x].dni;
+        clienteBorrado = arrayClientes[x].borrado;
+
+        if ( dniClienteAr == dni.value && !clienteBorrado ){ 
+            campoNombre.value = arrayClientes[x].nombre;
+        }
+    }
+
+    dni.disabled = true;
+
+    //Crar Cookie de tiempo: 
+    document.cookie = "Tiempo de compra =" + campoNombre.vlue + "; max-age = 60";
+    
+}
+
 function ponerProducto(){
 
     //Seleccionamos el nombre de los productos a través del id: 
@@ -281,15 +327,20 @@ function validarCampos(){
 
     cantidadValor = document.getElementById("cantidad").value;
 
+    console.log("stock producto: " + stockProductoSelec + " < cantidad comprar: " + cantidadValor)
+
     let resultado = true;
     
-    //Comprobamos primero que la cantidad sea un número, que sea distinta de 0 y el stock:
-	if( isNaN (cantidad.value) || cantidad.value == 0 || stockProductoSelec < cantidadValor){
-		cantidad.style.backgroundColor = "rgba(255,155,155,0.4)";
+    if(isNaN(cantidadValor) || cantidadValor == 0){
+        cantidad.style.backgroundColor = "rgba(255,155,155,0.4)";
 		cantidad.focus();
 		resultado = false;
+        alert("cantidad erronea");
+    } else if (stockProductoSelec < cantidadValor){
         document.getElementById("errorCantidad").style.display = "inline";
-    } else {
+        resultado = false;
+        alert("cantidad insuficiente");
+    } else { 
         //Control de stock:
         cantidadRestante = stockProductoSelec - cantidad.value;
         arrayProductos[productoSeleccionadoID - 1].stock = cantidadRestante;
@@ -297,12 +348,17 @@ function validarCampos(){
         document.getElementById("errorCantidad").style.display = "none";
         resultado = true;
     }
+
     
 	return resultado;
 }
 
 function LimpiarForm(){
     //Dejamos en blanco el formulario: 
+    dni.disabled = false;
+
+    dni.value = "Inicio";
+    nombre.value = "";
     referencia.value = "";
     precio.value = "";
     cantidad.value = "";
@@ -383,7 +439,7 @@ function anyadirFila(){
             nuevaCeldaID = document.createElement('td');
             nuevaCeldaID.setAttribute('class', 'id');
             nuevaCeldaID.setAttribute('hidden', 'true');           
-            contenidoID = document.createTextNode(id.value);
+            contenidoID = document.createTextNode(idP.value);
             nuevaCeldaID.appendChild(contenidoID);
             nuevaFila.appendChild(nuevaCeldaID);
             tbody.appendChild(nuevaFila);
@@ -480,9 +536,10 @@ function realizarCOMPRA(){
 
     for(x = 0; x < arrayClientes.length; x++){
         dniClienteAr = arrayClientes[x].dni;
+        clienteBorrado = arrayClientes[x].borrado;
         //console.log(dniClienteAr);
 
-        if ( dniClienteAr == dniClienteTb){ 
+        if ( dniClienteAr == dniClienteTb && !clienteBorrado ){ 
             idClienteTb = arrayClientes[x].id;
             //console.log(idClienteTb); 
         } 
@@ -493,7 +550,7 @@ function realizarCOMPRA(){
     nombreCliente = arrayClientes[idClienteTb-1].nombre; 
     
     carrito = [];
-    articulosVenta = {ref, precio, cantidad, total};
+    //articulosVenta = {idP, ref, precio, cantidad, total};
 
     if(arrayVentas.length == 0){
 
@@ -513,7 +570,8 @@ function realizarCOMPRA(){
 
             if(articulos > 0){		
                 for (var i = 0; i < articulos; i++) {
-                    articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+                    articulosVenta = {"idP" : filas[i].getElementsByClassName('id')[0].innerText,
+                            "ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
                             "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
                             "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
                             "total" : filas[i].getElementsByClassName('total')[0].innerText, 
@@ -554,7 +612,8 @@ function realizarCOMPRA(){
     
                 if(articulos > 0){		
                     for (var i = 0; i < articulos; i++) {
-                        articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+                        articulosVenta = {"idP" : filas[i].getElementsByClassName('id')[0].innerText,
+                                "ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
                                 "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
                                 "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
                                 "total" : filas[i].getElementsByClassName('total')[0].innerText, 
@@ -586,7 +645,8 @@ function realizarCOMPRA(){
 
     if(articulos > 0){		
         for (var i = 0; i < articulos; i++) {
-            articulosVenta = {"ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
+            articulosVenta = {"idP" : filas[i].getElementsByClassName('id')[0].innerText,
+                    "ref" : filas[i].getElementsByClassName('ref')[0].innerText, 
                     "precio" : filas[i].getElementsByClassName('precio')[0].innerText, 
                     "cantidad" : filas[i].getElementsByClassName('cantidad')[0].innerText, 
                     "total" : filas[i].getElementsByClassName('total')[0].innerText, 
@@ -600,14 +660,15 @@ function realizarCOMPRA(){
     //console.log(arrayVentas);
     ActualizarVentas();
     LimpiarForm();
-    BorrarCarrito();
+    //BorrarCarrito();
     ListadoCompras();
+    location.reload();
 }
 
 function BorrarCarrito(){
 
     for (let i = filas.length-1; i >= 0; i-- ){
-        //Recuperamos el id: 
+        //Recuperamos el id del producto: 
         productoSelecBorrar = filas[i].getElementsByClassName("id")[0].innerText;
         console.log( "productoSelecBorrar " + productoSelecBorrar);
 
@@ -631,7 +692,18 @@ function BorrarCarrito(){
     LimpiarForm();
 }
 
+function CancelarCompra(){
+    location.reload();
+}
+
 function ListadoCompras(){
+
+    tablaGVentas.style.display = "";
+    botonVer.style.display = "none";
+
+    botonOcultar.style.display = ""; 
+    botonOcultar.onclick = OcultarListadoCompras;
+
 
     for( let i = filasGVentas.length-1; i>0; i --){
         tablaGVentas.removeChild(filasGVentas[i]);
@@ -665,19 +737,20 @@ function ListadoCompras(){
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila);
 
-                //Añadimos la quinta celda BORRADO:
+                //Añadimos la lista de productos comprados por id: 
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'campoBorrado');
-                contenido = document.createTextNode(item.borrado);
-                nuevaCelda.appendChild(contenido);
-                nuevaFila.appendChild(nuevaCelda);
-                tabla.appendChild(nuevaFila);
+                nuevaCelda.setAttribute('class', 'productosID');
+                nuevaCelda.setAttribute('hidden', 'false');
+                nuevaLista = document.createElement('ul'); 
 
-                //Añadimos la segunda celda: totalCompra:
-                nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'nombreCliente');
-                contenido = document.createTextNode(item.totalCompra);
-                nuevaCelda.appendChild(contenido);
+                for (item2 of item.carrito){
+                    //Añadimos la referencia: 
+                    nuevoPuntoLista = document.createElement('li'); 
+                    contenido = document.createTextNode(item2.idP); 
+                    nuevoPuntoLista.appendChild(contenido); 
+                    nuevaLista.appendChild(nuevoPuntoLista); 
+                }
+                nuevaCelda.appendChild(nuevaLista);
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila);
 
@@ -729,6 +802,13 @@ function ListadoCompras(){
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila); 
                 
+                                //Añadimos la segunda celda: totalCompra:
+                                nuevaCelda = document.createElement('td');
+                                nuevaCelda.setAttribute('class', 'nombreCliente');
+                                contenido = document.createTextNode(item.totalCompra);
+                                nuevaCelda.appendChild(contenido);
+                                nuevaFila.appendChild(nuevaCelda);
+                                tablaGVentas.appendChild(nuevaFila);
 
             } else {
                 nuevaFila = document.createElement('tr');
@@ -751,21 +831,20 @@ function ListadoCompras(){
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila);
 
-                //Añadimos la quinta celda BORRADO:
+                //Añadimos la lista de productos comprados por ref: 
                 nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'campoBorrado');
-                //nuevaCelda.setAttribute('hidden', 'false');
-                contenido = document.createTextNode(item.borrado);
-                nuevaCelda.appendChild(contenido);
-                nuevaFila.appendChild(nuevaCelda);
-                tablaGVentas.appendChild(nuevaFila);
+                nuevaCelda.setAttribute('class', 'productosID');
+                nuevaCelda.setAttribute('hidden', 'false');
+                nuevaLista = document.createElement('ul'); 
 
-
-                //Añadimos la segunda celda: totalCompra:
-                nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('class', 'totalCompra');
-                contenido = document.createTextNode(item.totalCompra);
-                nuevaCelda.appendChild(contenido);
+                for (item2 of item.carrito){
+                    //Añadimos la referencia: 
+                    nuevoPuntoLista = document.createElement('li'); 
+                    contenido = document.createTextNode(item2.idP); 
+                    nuevoPuntoLista.appendChild(contenido); 
+                    nuevaLista.appendChild(nuevoPuntoLista); 
+                }
+                nuevaCelda.appendChild(nuevaLista);
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila);
 
@@ -817,6 +896,14 @@ function ListadoCompras(){
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila); 
 
+                //Añadimos la segunda celda: totalCompra:
+                nuevaCelda = document.createElement('td');
+                nuevaCelda.setAttribute('class', 'totalCompra');
+                contenido = document.createTextNode(item.totalCompra);
+                nuevaCelda.appendChild(contenido);
+                nuevaFila.appendChild(nuevaCelda);
+                tablaGVentas.appendChild(nuevaFila);
+
                 //Añadimos la sexta celda BOTON EDITAR:
                 nuevaCelda = document.createElement('td');
                 nuevaCelda.setAttribute('id', 'celda1');
@@ -831,38 +918,51 @@ function ListadoCompras(){
                 nuevaFila.appendChild(nuevaCelda);
                 tablaGVentas.appendChild(nuevaFila);
 
-                //Añadimos la septima celda BOTON BORRAR:
-                nuevaCelda = document.createElement('td');
-                nuevaCelda.setAttribute('id', 'celda2');
-                nuevaCelda.innerHTML = '<button id="baja">Eliminar registro</button>';
-                nuevaCelda.addEventListener("click", function(){
-                                                        
-                                                        id = this.parentNode.getAttribute("id");
-
-                                                        arrayVentas[id-1].borrado = true; 
-
-                                                        ActualizarVentas();
-
-                                                        //Actualizamos la página:
-                                                        location.reload();
-                                                        
-                                                    });
-                nuevaFila.appendChild(nuevaCelda);
-                tablaGVentas.appendChild(nuevaFila);
-
             }
         }
     }
 }
 
+function OcultarListadoCompras(){
+    tablaGVentas.style.display = "none";
+
+    botonOcultar.style.display = "none";
+    botonVer.style.display = ""; 
+}
+
 function eliminarCOMPRA(){
+
+    //BorrarCarrito();
+
+    //location.reload();
+    var IDVentasF = document.getElementById("IDVenta").value;
+    console.log(IDVentasF);
+
+    arrayVentas[IDVentasF - 1].borrado = true; 
     BorrarCarrito();
-    //Actualizamos la página:
+    ActualizarVentas();
+
     location.reload();
+    // console.log("id de la venta a borrar"); 
+    // BorrarCarrito();
+    // arrayVentas[idProductoBorrar - 1].borrado = true; 
+
+    // ActualizarVentas();
+
+    // alert("Venta eliminada"); 
+
+    // location.reload();
+
+
+    // //Actualizamos la página:
+    // location.reload();
 }
 
 function editarCompra(id){
-    BorrarCarrito();
+    //BorrarCarrito();
+    for (let i = filas.length-1; i >= 0; i-- ){
+        filas[i].remove();
+    }
 
     document.getElementById("dni").value = arrayVentas[id-1].DNICliente;
     arrayEspecial = arrayVentas[id-1].carrito; 
@@ -883,6 +983,15 @@ function editarCompra(id){
                         nuevaFila.appendChild(nuevaCeldaREF);
                         tbody.appendChild(nuevaFila);
             
+                        //Añadimos la primera celda ID:
+                        nuevaCeldaREF = document.createElement('td');
+                        nuevaCeldaREF.setAttribute('hidden', 'false');
+                        nuevaCeldaREF.setAttribute('class', 'id');
+                        contenidoREF = document.createTextNode(item2.idP);
+                        nuevaCeldaREF.appendChild(contenidoREF);
+                        nuevaFila.appendChild(nuevaCeldaREF);
+                        tbody.appendChild(nuevaFila);
+
                         //Añadimos la primera celda REFERNCIA:
                         nuevaCeldaREF = document.createElement('td');
                         nuevaCeldaREF.setAttribute('class', 'ref');

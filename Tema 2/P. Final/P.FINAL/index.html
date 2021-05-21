@@ -9,36 +9,35 @@
     <title>Ventas</title>
 </head>
 <body>
+
     <nav> 
         <ul>
             <li><a id="gestionClientes" class="mar_t_10 btn-block" href="formularioClientes.html">Gestión de clientes</a> </li>
             <li><a id="gestionProductos" class="mar_t_10 btn-block" href="formularioProductos.html">Gestión de productos</a></li>
-            <li><a id="login" class="mar_t_10 btn-block">Login</a></li>
         </ul>
     </nav>
 
     <main>
-        <div id="productos">
-            
-        </div>
+        <div id="productos"></div>
         <div id="factura">
             <form action="" id="miform"  >
                 <div id='campos_derecha'>
                     <label for="IDVenta">IDVenta: </label><input type="text" id="IDVenta" value="" disabled><br>
-                    <label for="dni">DNI: </label><input type="text" id="dni" value="" placeholder="12345678X"><br>
+                    <label for="dni">DNI: </label>
+                    <select name="DNI" id="dni" onchange="RecuperarNombreCliente()">
+                        <option value="Inicio">Seleccione un DNI</option>
+                    </select>
+                    <input type="text" id="nombre" value="" disabled><br>
                     
-                    <label for="ref" style="visibility:hidden">Ref: </label><input type="text" id="id" value="" placeholder="ref" disabled hidden><br>
+                    <label for="ref" style="visibility:hidden">ID: </label><input type="text" id="id" value="" placeholder="id" disabled hidden><br>
 
-                    <label for="ref"> Ref: </label><input type="text" id="ref" value="" placeholder="ref" disabled><br>
+                    <label for="ref">Ref: </label><input type="text" id="ref" value="" placeholder="ref" disabled><br>
                     <label for="precio">Precio: </label><input type="text" id="precio" value="" placeholder="000.00" disabled><br>
                     <label for="cantidad">Cantidad: </label><input type="text" id="cantidad" value="" placeholder="unidades"> <input type="text" hidden id="errorCantidad"  value="ERROR">
                 </div>
                 <div id="botonesGC">
                     <td><input type="button" id="grabar" value="Grabar"></td>
                     <td><input type="button" id="cancelar" value="Cancelar"></td>
-
-                    <!-- <button id="grabar" class="mar_t_10">Grabar</button> 
-                    <button id="cancelar" class="mar_t_10">Cancelar</button> -->
                 </div>
             </form>
 
@@ -50,7 +49,7 @@
                 <tbody>
                     <tr>
                         <th class="ancho1">DNI.</th>
-                        <th class="ancho2" hidden> ID</th>
+                        <th class="ancho2" hidden>ID.</th>
                         <th class="ancho2">Ref.</th>
                         <th class="ancho3">Precio</th>
                         <th class="ancho4">Cantidad</th>
@@ -60,13 +59,14 @@
                 
                 <tfoot>
                     <tr>
-                        <td colspan="4">Total</td><td class="total a_derecha">0</td>
+                        <td colspan="5">Total</td><td class="total a_derecha">0.00€</td>
                     </tr>
                 </tfoot>
             </table>
 
             <div>
                 <button id="BorrarCarrito" class="mar_t_10">Borrar carrito</button> 
+                <button id="CancelarCompra" class="mar_t_10">Cancelar compra</button> 
             </div>
 
             <div>
@@ -75,21 +75,25 @@
             </div>
 
         </div>
+
         <div id="ventas">
-            <h2>Gestión de ventas:</h2>
-            <table id="gestionVentas">
+            <h2>Gestión de ventas: <button id="ver">VER</button><button id="ocultar" style="display: none;">OCULTAR</button></h2>
+
+            <table id="gestionVentas" style="display:none;">
                 <colgroup>
-                    <col><col><col><col>
+                    <col><col><col>
                 </colgroup>
 
                 <tbody id="listaVentas_tbody">
                     <tr>
                         <th class="ancho0">ID Venta</th>
-                        <!-- <th class="ancho1">ID Cliente</th> -->
-                        <!-- <th class="ancho2">DNI Cliente</th> -->
                         <th class="ancho1">NOMBRE Cliente</th>
-                        <th class="ancho3"> Borrado </th>
-                        <th class="ancho2">Carrito</th>
+
+                        <th class="ancho2" hidden>IDPRoducto</th>
+                        <th class="ancho2">Referencia Producto</th>
+                        <th class="ancho2">Cantidad</th>
+                        <th class="ancho2">Total</th>
+                        <th class="ancho2">Total Compra</th>
                     </tr>
                 </tbody>
             

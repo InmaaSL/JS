@@ -1,3 +1,15 @@
+@font-face{
+    font-family:helvetica_neue;
+    src: url(http://josh-ruther4d.com/Fonts/HelveticaNeueLite.otf);
+}
+
+body{
+    background:#e3e3e3;
+    font-family:helvetica_neue;
+    color:#a0a0a0;
+    font-size:14px;
+}
+
 nav{
     width: 100%;
     text-align: center;
@@ -29,6 +41,7 @@ color:#000;
 p, div {
     margin:0px; 
     padding: 0px;
+
 }
 
 h1{
@@ -39,7 +52,8 @@ main{width:1100px;
     margin:auto;
 }
 
-#productos {margin-left:20px;
+#productos {
+    margin-left:20px;
     width:45%;
     height:500px;
     float:left;
@@ -49,12 +63,13 @@ main{width:1100px;
     box-sizing:border-box;
 }
 
-#factura{ margin-left:20px;
+#factura{ 
+    margin-left:20px;
     width:45%;
     height:500px;
     float:right;
     border:1px solid;
-    padding:10px;
+    padding:20px;
     box-sizing:border-box;
     border-radius:10px;
     font-size:14px;
@@ -127,3 +142,9 @@ button.boton{font-size:13px;
 li{
     list-style: none;
 }
+
+#ventas{
+    display: inline-block;
+}
+
+/*  */
